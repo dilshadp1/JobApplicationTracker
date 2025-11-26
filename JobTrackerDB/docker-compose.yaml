@@ -1,0 +1,18 @@
+
+services:
+  database:
+    image : mcr.microsoft.com/mssql/server:2022-latest
+    
+    ports : 
+      - 1433:1433
+    environment :
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=qwer@1234
+    volumes:
+      - type: 'bind'
+        target: '/var/opt/mssql/data'
+        source: './docker/sqldata/data'
+
+volumes:
+  sqldata:
+    
