@@ -19,8 +19,7 @@ namespace JobTracker.Domain.Entities
         public string Phone { get; private set; }
         public DateTime CreatedAt { get; private set; }
 
-        //public ICollection<JobApplication> JobApplications { get; private set; } = new List<JobApplication>();
-
+        public ICollection<JobApplication> JobApplications { get; private set; }
         private User() { }
 
         public User(string firstName, string lastName, string email, string passwordHash, string phone,UserRole role = UserRole.User)
@@ -32,6 +31,7 @@ namespace JobTracker.Domain.Entities
             Role = role;
             Phone = phone;
             CreatedAt = DateTime.UtcNow;
+            JobApplications = new List<JobApplication>();
         }
     }
 }

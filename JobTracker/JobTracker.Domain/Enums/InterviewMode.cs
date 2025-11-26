@@ -8,7 +8,7 @@ namespace JobTracker.Domain.Enums
 {
     public enum InterviewMode
     {
-        online = 0,
-        offline = 1
+        Online = 0,
+        Offline = 1
     }
 }
