@@ -1,4 +1,5 @@
 ﻿using JobTracker.Application.Command.CreateUser;
+using JobTracker.Application.Command.LoginCommand;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,20 @@ namespace JobTracker.API.Controllers
             catch (FluentValidation.ValidationException ex)
             {
                 return BadRequest(new { Errors = ex.Errors.Select(e => e.ErrorMessage) });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> Login(LoginCommand command)
+        {
+            try
+            {
+                var token = await _mediator.Send(command);
+                return Ok(new { Token = token, Message = "Login successful!" });
             }
             catch (Exception ex)
             {
