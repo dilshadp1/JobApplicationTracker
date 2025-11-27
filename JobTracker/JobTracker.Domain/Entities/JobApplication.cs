@@ -27,6 +27,7 @@ namespace JobTracker.Domain.Entities
         public ICollection<Interview> Interviews { get; private set; }
         public Offer? Offer { get; private set; }
 
+        private JobApplication() { }
         public JobApplication(int userId,string company,string position,DateTime appliedDate,string? jobUrl,decimal? salaryExpectation,string? notes) {
 
             UserId = userId;

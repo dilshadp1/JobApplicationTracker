@@ -20,6 +20,7 @@ namespace JobTracker.Domain.Entities
 
         public JobApplication JobApplication { get; private set; }
 
+        private Interview() { }
         public Interview(int applicationId,DateTime interviewDate,string roundName,string? locationUrl,InterviewMode mode) { 
 
             ApplicationId = applicationId;
