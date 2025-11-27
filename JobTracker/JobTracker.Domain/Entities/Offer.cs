@@ -17,6 +17,7 @@ namespace JobTracker.Domain.Entities
 
         public JobApplication JobApplication { get; private set; }
 
+        private Offer() { }
         public Offer(int applicationId, decimal salary, DateTime offerDate, DateTime? deadline, string? benefits)
         {
             ApplicationId = applicationId;
