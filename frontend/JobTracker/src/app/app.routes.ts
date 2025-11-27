@@ -4,6 +4,6 @@ export const routes: Routes = [
   {
     path: 'tracker',
     loadChildren: () =>
-      import('./features/tracker/tracker.module').then((m) => m.TrackerModule),
+      import('./features/tracker/tracker.routes').then((m) => m.trackerRoutes),
   },
 ];
