@@ -20,6 +20,7 @@ namespace JobTracker.Domain.Entities
         public DateTime CreatedAt { get; private set; }
 
         public ICollection<JobApplication> JobApplications { get; private set; }
+        public ICollection<RefreshToken> RefreshTokens { get; private set; } = new List<RefreshToken>();
         private User() { }
 
         public User(string firstName, string lastName, string email, string passwordHash, string phone,UserRole role = UserRole.User)

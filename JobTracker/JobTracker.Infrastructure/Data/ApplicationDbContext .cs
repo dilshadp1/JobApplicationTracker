@@ -13,6 +13,7 @@ namespace JobTracker.Infrastructure.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<Interview> Interviews { get; set; }
         public DbSet<Offer> Offers { get; set; }
@@ -63,6 +64,12 @@ namespace JobTracker.Infrastructure.Data
                 entity.HasOne(j => j.JobApplication).WithOne(o => o.Offer)
                 .HasForeignKey<Offer>(a=>a.ApplicationId).OnDelete(DeleteBehavior.Cascade);
             });
+
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.HasIndex(r => r.TokenHash).IsUnique();
+            });
+            
         }
 
 
