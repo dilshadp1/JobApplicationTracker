@@ -64,12 +64,12 @@ namespace JobTracker.Infrastructure.Data
                 entity.HasOne(j => j.JobApplication).WithOne(o => o.Offer)
                 .HasForeignKey<Offer>(a=>a.ApplicationId).OnDelete(DeleteBehavior.Cascade);
             });
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
 
-            modelBuilder.Entity<RefreshToken>()
-            .HasIndex(r => r.TokenHash);
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.HasIndex(r => r.TokenHash).IsUnique();
+            });
+            
         }
 
 
