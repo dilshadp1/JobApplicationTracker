@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JobTracker.Application.DTO;
 using JobTracker.Application.Interfaces;
 using JobTracker.Domain.Entities;
 using MediatR;
 
 namespace JobTracker.Application.Command.LoginCommand
 {
-    public class LoginUserCommandHandler(IGenericRepository<User> userRepository, IJwtTokenGenerator tokenGenerator) : IRequestHandler<LoginCommand, string>
+    public class LoginUserCommandHandler(IGenericRepository<User> userRepository, IGenericRepository<Domain.Entities.RefreshToken> refreshRepo, IJwtTokenGenerator tokenGenerator) : IRequestHandler<LoginCommand, AuthResponse>
     {
-        public async Task<string> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<AuthResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
             var users = await userRepository.GetAsync(u => u.Email == request.Email);
             var user = users.FirstOrDefault();
@@ -29,9 +30,17 @@ namespace JobTracker.Application.Command.LoginCommand
                 throw new Exception("Incorrect password.");
             }
 
-            string token = tokenGenerator.GenerateToken(user);
+            string accessToken = tokenGenerator.GenerateToken(user);
+            string refreshTokenString = tokenGenerator.GenerateRefreshToken();
 
-            return token;
+            var refreshTokenEntity = new Domain.Entities.RefreshToken(refreshTokenString, user.Id);
+            await refreshRepo.AddAsync(refreshTokenEntity);
+
+            return new AuthResponse
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshTokenString
+            };
         }
     }
 }

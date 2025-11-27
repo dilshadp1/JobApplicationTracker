@@ -21,5 +21,6 @@ namespace JobTracker.Application.Interfaces
 
         Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate);
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+        Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate);
     }
 }
