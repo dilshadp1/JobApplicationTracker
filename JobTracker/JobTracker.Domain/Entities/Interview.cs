@@ -1,9 +1,5 @@
 ﻿using JobTracker.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace JobTracker.Domain.Entities
 {
@@ -21,17 +17,21 @@ namespace JobTracker.Domain.Entities
         public JobApplication JobApplication { get; private set; }
 
         private Interview() { }
-        public Interview(int applicationId,DateTime interviewDate,string roundName,string? locationUrl,InterviewMode mode) { 
+        public Interview(int applicationId,DateTime interviewDate,string roundName, InterviewMode mode,string? locationUrl) { 
 
             ApplicationId = applicationId;
             InterviewDate= interviewDate;
             RoundName = roundName;
             Status = InterviewStatus.Scheduled;
+            Mode = mode;
             LocationUrl = locationUrl;
-            Mode=mode;
             
         }
 
+        public void UpdateStatus(InterviewStatus status)
+        {
+            Status = status;
+        }
         public void MarkAsCompleted(string feedback)
         {
             Status = InterviewStatus.Completed;

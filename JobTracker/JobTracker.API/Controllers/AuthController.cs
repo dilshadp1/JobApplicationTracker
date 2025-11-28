@@ -1,11 +1,9 @@
-﻿using Azure;
+﻿
+using JobTracker.Application.Command.CreateRefreshToken;
 using JobTracker.Application.Command.CreateUser;
 using JobTracker.Application.Command.LoginCommand;
-using JobTracker.Application.Command.RefreshToken;
 using JobTracker.Application.DTO;
-using JobTracker.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobTracker.API.Controllers
@@ -23,44 +21,26 @@ namespace JobTracker.API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<int>> Register(CreateUserCommand command)
         {
-            try
-            {
-                var userId = await _mediator.Send(command);
+            var userId = await _mediator.Send(command);
 
-                return Ok(new
-                {
-                    UserId = userId,
-                    Message = "User registered successfully!"
-                });
-            }
-            catch (FluentValidation.ValidationException ex)
+            return Ok(new
             {
-                return BadRequest(new { Errors = ex.Errors.Select(e => e.ErrorMessage) });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Error = ex.Message });
-            }
+                UserId = userId,
+                Message = "User registered successfully!"
+            });
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<string>> Login(LoginCommand command)
         {
-            try
-            {
-                var response = await _mediator.Send(command);
-                SetRefreshTokenCookie(response.RefreshToken);
-                response.RefreshToken = string.Empty;
-                return Ok(new 
-                { 
-                    Token = response.AccessToken, 
-                    Message = "Login successful!" 
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Error = ex.Message });
-            }
+            var response = await _mediator.Send(command);
+            SetRefreshTokenCookie(response.RefreshToken);
+            response.RefreshToken = string.Empty;
+            return Ok(new 
+            { 
+                Token = response.AccessToken, 
+                Message = "Login successful!" 
+            });
         }
 
         [HttpPost("refresh-token")]
@@ -72,19 +52,12 @@ namespace JobTracker.API.Controllers
             {
                 return Unauthorized("No refresh token found.");
             }
-            var command = new RefreshTokenCommand { Token = refreshToken };
+            var command = new CreateRefreshTokenCommand { Token = refreshToken };
 
-            try
-            {
-                var response = await _mediator.Send(command);
-                SetRefreshTokenCookie(response.RefreshToken);
-                response.RefreshToken = string.Empty;
-                return Ok(response);
-            }
-            catch (Exception)
-            {
-                return Unauthorized("Invalid token.");
-            }
+            var response = await _mediator.Send(command);
+            SetRefreshTokenCookie(response.RefreshToken);
+            response.RefreshToken = string.Empty;
+            return Ok(response);
         }
 
         private void SetRefreshTokenCookie(string refreshToken)

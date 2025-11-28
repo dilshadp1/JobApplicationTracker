@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JobTracker.Domain.Entities;
+﻿using JobTracker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace JobTracker.Infrastructure.Data
@@ -25,10 +20,6 @@ namespace JobTracker.Infrastructure.Data
 
             base.OnModelCreating(modelBuilder);
 
-            /*modelBuilder.Entity<User>()
-            .HasIndex(u => u.Email)
-            .IsUnique();*/
-
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.FirstName).HasMaxLength(50).IsRequired();
@@ -43,6 +34,7 @@ namespace JobTracker.Infrastructure.Data
                 entity.Property(e => e.Company).HasMaxLength(100).IsRequired();
                 entity.Property(e => e.Position).HasMaxLength(100).IsRequired();
                 entity.Property(e => e.SalaryExpectation).HasPrecision(18,2);
+                entity.Property(e => e.JobUrl).HasMaxLength(500);
 
                 entity.HasOne(u => u.User).WithMany(j => j.JobApplications)
                 .HasForeignKey(u=>u.UserId).OnDelete(DeleteBehavior.Cascade);
