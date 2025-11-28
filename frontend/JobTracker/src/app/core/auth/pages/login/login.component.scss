@@ -1,0 +1,92 @@
+/* 1. Page Background - Professional Gradient */
+.login-page {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 2. Abstract Background Shapes */
+.background-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+}
+.shape-1 {
+  top: -10%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: rgba(13, 110, 253, 0.2); /* Primary Blue */
+}
+.shape-2 {
+  bottom: -10%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: rgba(102, 16, 242, 0.2); /* Indigo */
+}
+
+/* 3. Card Styling */
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  background: rgba(255, 255, 255, 0.95); /* Slight transparency */
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  z-index: 1; /* Above shapes */
+  transition: transform 0.3s ease;
+}
+
+/* 4. Brand Logo Circle */
+.brand-logo {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+  color: white;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+/* 5. Input Fields */
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+.form-control:focus {
+  box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+  border-color: #0d6efd;
+}
+.form-floating > label {
+  padding-left: 1rem;
+}
+
+/* 6. Button Styling */
+.btn-login {
+  border-radius: 10px;
+  background: linear-gradient(to right, #0d6efd, #0056b3);
+  border: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+}
+.btn-login:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(13, 110, 253, 0.3);
+}
+.btn-login:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* 7. Link Hover Effect */
+.hover-link:hover {
+  text-decoration: underline !important;
+}
