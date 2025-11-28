@@ -1,0 +1,89 @@
+<div class="login-page">
+  <div class="background-shape shape-1"></div>
+  <div class="background-shape shape-2"></div>
+
+  <div class="container d-flex justify-content-center align-items-center min-vh-100 position-relative">
+    <div class="card login-card shadow-lg border-0">
+      <div class="card-body p-5">
+        
+        <div class="text-center mb-4">
+          <div class="brand-logo mb-3">
+            <i class="bi bi-briefcase-fill"></i> 
+            JT
+          </div>
+          <h2 class="fw-bold text-dark">Welcome Back</h2>
+          <p class="text-muted">Sign in to track your career journey</p>
+        </div>
+        
+        <!-- Error Alert -->
+        @if (errorMessage) {
+          <div class="alert alert-danger d-flex align-items-center fade show" role="alert">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill me-2" viewBox="0 0 16 16">
+              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            <div>{{ errorMessage }}</div>
+          </div>
+        }
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          
+          <!-- Email Input (Floating Label) -->
+          <div class="form-floating mb-3">
+            <input 
+              type="email" 
+              class="form-control" 
+              id="email" 
+              formControlName="email" 
+              [class.is-invalid]="isFieldInvalid('email')"
+              placeholder="name@example.com">
+            <label for="email">Email address</label>
+            @if (isFieldInvalid('email')) {
+              <div class="invalid-feedback text-start">Valid email is required.</div>
+            }
+          </div>
+
+          <!-- Password Input (Floating Label) -->
+          <div class="form-floating mb-4">
+            <input 
+              type="password" 
+              class="form-control" 
+              id="password" 
+              formControlName="password" 
+              [class.is-invalid]="isFieldInvalid('password')"
+              placeholder="Password">
+            <label for="password">Password</label>
+            @if (isFieldInvalid('password')) {
+              <div class="invalid-feedback text-start">
+                @if (loginForm.get('password')?.hasError('required')) {
+                  <span>Password is required.</span>
+                } @else if (loginForm.get('password')?.hasError('minlength')) {
+                  <span>Password must be at least 6 characters.</span>
+                }
+              </div>
+            }
+          </div>
+
+          <button 
+            type="submit" 
+            class="btn btn-primary w-100 py-3 fw-bold btn-login" 
+            [disabled]="loginForm.invalid || isLoading">
+            @if (isLoading) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Logging in...
+            } @else {
+              Sign In
+            }
+          </button>
+
+          <div class="text-center mt-4">
+            <p class="mb-0 text-muted">
+              Don't have an account? 
+              <a routerLink="/register" class="text-primary fw-semibold text-decoration-none hover-link">Create Account</a>
+            </p>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
