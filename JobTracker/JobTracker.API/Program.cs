@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using FluentValidation;
+using JobTracker.API.Middleware;
 using JobTracker.Application.Behaviors;
 using JobTracker.Application.Interfaces;
 using JobTracker.Infrastructure.Authentication;
@@ -23,6 +24,8 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -77,6 +80,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseCors("AllowAngular");
 app.UseHttpsRedirection();
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

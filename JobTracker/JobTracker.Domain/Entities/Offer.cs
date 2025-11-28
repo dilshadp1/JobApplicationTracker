@@ -12,13 +12,13 @@ namespace JobTracker.Domain.Entities
         public int ApplicationId { get; private set; }
         public decimal Salary { get; private set; }
         public DateTime OfferDate { get; private set; }
-        public DateTime? Deadline { get; private set; }
+        public DateTime Deadline { get; private set; }
         public string? Benefits { get; private set; }
 
         public JobApplication JobApplication { get; private set; }
 
         private Offer() { }
-        public Offer(int applicationId, decimal salary, DateTime offerDate, DateTime? deadline, string? benefits)
+        public Offer(int applicationId, decimal salary, DateTime offerDate, DateTime deadline, string? benefits)
         {
             ApplicationId = applicationId;
             Salary = salary;
