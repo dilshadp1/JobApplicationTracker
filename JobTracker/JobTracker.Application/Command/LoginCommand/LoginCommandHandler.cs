@@ -5,7 +5,7 @@ using MediatR;
 
 namespace JobTracker.Application.Command.LoginCommand
 {
-    public class LoginUserCommandHandler(IGenericRepository<User> userRepository, IGenericRepository<Domain.Entities.RefreshToken> refreshRepo, IJwtTokenGenerator tokenGenerator) : IRequestHandler<LoginCommand, AuthResponse>
+    public class LoginUserCommandHandler(IGenericRepository<User> userRepository, IGenericRepository<RefreshToken> refreshRepo, IJwtTokenGenerator tokenGenerator) : IRequestHandler<LoginCommand, AuthResponse>
     {
         public async Task<AuthResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
@@ -28,7 +28,7 @@ namespace JobTracker.Application.Command.LoginCommand
             string accessToken = tokenGenerator.GenerateToken(user);
             string refreshTokenString = tokenGenerator.GenerateRefreshToken();
 
-            var refreshTokenEntity = new Domain.Entities.RefreshToken(refreshTokenString, user.Id);
+            var refreshTokenEntity = new RefreshToken(refreshTokenString, user.Id);
             await refreshRepo.AddAsync(refreshTokenEntity);
 
             return new AuthResponse
