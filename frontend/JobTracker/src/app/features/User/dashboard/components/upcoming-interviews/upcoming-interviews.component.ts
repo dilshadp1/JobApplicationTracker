@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-upcoming-interviews',
-  imports: [CommonModule,RouterLink],
+  imports: [CommonModule],
   templateUrl: './upcoming-interviews.component.html',
   styleUrl: './upcoming-interviews.component.scss'
 })

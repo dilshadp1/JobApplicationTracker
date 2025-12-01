@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { JobApplicationService } from '../../../core/services/job-application.service';
 import { Router } from '@angular/router';
+import { JobApplicationService } from '../../../core/services/job-application/job-application.service';
 
 @Component({
   selector: 'app-job-add',
@@ -22,10 +22,10 @@ export class JobAddComponent {
 
   public onSubmit(){
     const jobData=this.jobForm.value;
-    this.jobApplicationService.addJob(jobData).subscribe(()=>
-    {
-      this.router.navigate(['/jobs']);
-    });
+    // this.jobApplicationService.addJob(jobData).subscribe(()=>
+    // {
+    //   this.router.navigate(['/jobs']);
+    // });
     
   }
 }

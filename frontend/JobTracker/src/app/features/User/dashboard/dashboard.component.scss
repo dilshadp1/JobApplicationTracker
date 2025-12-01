@@ -1,71 +1,52 @@
-/* Base Card Styling */
+/* Clean, White Stat Card */
 .stat-card {
-  /* Using 135deg makes the gradient flow diagonally from top-left to bottom-right */
-  background: linear-gradient(135deg, #4c6691 0%, #0dcaf0 100%);
-  border-radius: 12px; /* Slightly softer corners */
-  padding: 1rem;
+  background: #ffffff; /* White background instead of gradient */
+  border-radius: 16px; /* Rounder corners look friendlier/less rigid */
+  padding: 1.5rem;
   position: relative;
-  /* Softer, colored shadow to match the theme */
-  box-shadow: 0 10px 20px -10px rgba(13, 202, 240, 0.4);
-  transition: all 0.3s ease;
-  color: #fff;
-  border-bottom: 4px solid transparent;
-  
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04); /* Very subtle shadow */
+  border: 1px solid rgba(0,0,0,0.05); /* Slight border for definition */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  overflow: hidden; /* Ensures content doesn't spill if we add effects */
+  transition: all 0.3s ease;
 }
 
-/* Hover Effect: Lift up and glow */
+/* Hover: subtle lift and border color */
 .stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px -10px rgba(13, 202, 240, 0.6);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0,0,0,0.1);
 }
 
-.stat-content {
-  flex: 1;
-  padding-right: 12px;
-  z-index: 2;
-}
-
-/* Typography */
+/* Update Text Colors for White Background */
 .stat-number {
-  font-size: 2rem;
-  font-weight: 800; /* Extra bold for impact */
-  line-height: 1;
-  margin-bottom: 0.25rem;
-  color: #ffffff;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle depth */
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2c3e50; /* Dark text for contrast */
+  margin-bottom: 0.1rem;
+  text-shadow: none; /* Remove shadow */
 }
 
 .stat-label {
-  font-size: 0.85rem;
-  font-weight: 500;
-  /* CRITICAL CHANGE: Use transparent white instead of grey */
-  color: rgba(255, 255, 255, 0.85); 
-  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6c757d; /* Muted grey */
   letter-spacing: 0.5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Icon Container - The "Pop" Factor */
+/* Make the Icon Box softer */
 .icon-box {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  background-color: #ffffff;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  z-index: 2;
+  font-size: 1.5rem;
+  /* Use a very light background for the icon container based on the icon color */
+  background-color: #f8f9fa; 
 }
-
 .stat-card::before {
   content: '';
   position: absolute;
@@ -77,7 +58,6 @@
   pointer-events: none;
 }
 
-/* --- Missing Bootstrap Custom Colors --- */
 
 /* Defines text-purple for the Offers icon */
 .text-purple {
@@ -93,3 +73,32 @@
 .text-warning {
   color: #ffc107 !important;
 }
+// -------------------------------------------------------------------------------------
+/* ... existing card styles ... */
+
+/* Timeline Dot */
+.status-dot {
+  height: 10px;
+  width: 10px;
+  background-color: #dee2e6;
+  border-radius: 50%;
+  display: inline-block;
+}
+.status-dot.primary { background-color: #0d6efd; }
+.status-dot.success { background-color: #198754; }
+.status-dot.danger { background-color: #dc3545; }
+.status-dot.warning { background-color: #ffc107; }
+.status-dot.purple { background-color: #8950fc; }
+.status-dot.orange { background-color: #fd7e14; }
+
+/* Custom Light Badges */
+.bg-light-primary { background-color: rgba(13, 110, 253, 0.1); }
+.bg-light-success { background-color: rgba(25, 135, 84, 0.1); }
+.bg-light-danger { background-color: rgba(220, 53, 69, 0.1); }
+.bg-light-warning { background-color: rgba(255, 193, 7, 0.1); }
+.bg-light-purple { background-color: rgba(137, 80, 252, 0.1); }
+.bg-light-orange { background-color: rgba(253, 126, 20, 0.1); }
+
+/* Text Colors for Badges */
+.text-purple { color: #8950fc !important; }
+.text-orange { color: #fd7e14 !important; }

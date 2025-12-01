@@ -31,6 +31,16 @@ namespace JobTracker.Infrastructure.Repositories
             return stats.ToDictionary(k => k.Status, v => v.Count);
         }
 
-       
+        public async Task<List<JobApplication>> GetRecentApplicationsAsync(int userId, int count)
+        {
+            return await context.JobApplications
+                .AsNoTracking()
+                .Where(j => j.UserId == userId)
+                .OrderByDescending(j => j.UpdatedAt)
+                .Take(count)
+                .ToListAsync();
+        }
+
+
     }
 }

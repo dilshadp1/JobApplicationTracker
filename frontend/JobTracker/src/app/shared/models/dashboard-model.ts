@@ -1,3 +1,4 @@
+import { RecentActivity } from "./recent-activity";
 import { UpcomingInterview } from "./upcoming-interview";
 
 export interface DashboardStats {
@@ -8,6 +9,7 @@ export interface DashboardStats {
   hired: number;
   declined: number;
 
-    upcomingInterviews: UpcomingInterview[];
+  upcomingInterviews: UpcomingInterview[];
+  recentActivities: RecentActivity[];
 
 }

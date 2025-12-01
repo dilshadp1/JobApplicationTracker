@@ -2,6 +2,7 @@
 using JobTracker.Application.DTO;
 using JobTracker.Application.Query.JobApplicationsQuery.GetJobApplications;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -10,6 +11,7 @@ namespace JobTracker.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class JobApplicationsController : ControllerBase
     {
         private readonly IMediator _mediator;
