@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { JobApplicationService } from '../../../core/services/job-application.service';
 import { JobApplication } from '../../models/job-application';
+import { JobApplicationService } from '../../../core/services/job-application/job-application.service';
 
 @Component({
   selector: 'app-job-list',

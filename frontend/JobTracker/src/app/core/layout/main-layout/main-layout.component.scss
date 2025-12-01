@@ -25,17 +25,6 @@
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1); /* Shadow depth */
 }
 
-/* Brand Section */
-// .sidebar-heading {
-//   height: 74px; 
-//   padding: 1.5rem;
-//   padding-bottom: 2px;
-//   font-size: 1rem;
-//   font-weight:200;
-//   letter-spacing: 1px;
-//   background: linear-gradient(45deg, #4c6691, #0dcaf0);
-//   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-// }
 .sidebar-heading {
   height: 74px; 
   padding: 0 1.5rem; /* Adjusted padding for horizontal layout */
@@ -74,7 +63,6 @@
 /* Section Headers */
 .sidebar-divider {
   font-size: 0.7rem;
-//   text-transform: uppercase;
   letter-spacing: 1.5px;
   color: rgba(255, 255, 255, 0.4) !important;
   font-weight: bold;

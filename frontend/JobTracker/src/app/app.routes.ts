@@ -13,11 +13,7 @@ export const routes: Routes = [
     path: 'user', 
     loadChildren: () => import('./features/User/user.routes').then(m => m.userRoutes)
   },
-  {
-    path: 'profile', 
-    loadComponent: () => import('./features/profile/profile/profile.component').then(m => m.ProfileComponent),
-    title:'My Profile'
-  },
+
 
   
 ];
