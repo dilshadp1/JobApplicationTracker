@@ -1,7 +1,7 @@
 ﻿
-using JobTracker.Application.Command.CreateRefreshToken;
-using JobTracker.Application.Command.CreateUser;
-using JobTracker.Application.Command.LoginCommand;
+using JobTracker.Application.Command.AuthenticationCommands.CreateRefreshToken;
+using JobTracker.Application.Command.AuthenticationCommands.LoginCommand;
+using JobTracker.Application.Command.UserCommands.CreateUser;
 using JobTracker.Application.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

@@ -1,0 +1,17 @@
+﻿using FluentValidation;
+
+namespace JobTracker.Application.Command.AuthenticationCommands.LoginCommand
+{
+    public class LoginCommandValidator : AbstractValidator<LoginCommand>
+    {
+        public LoginCommandValidator()
+        {
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email is required.")
+                .EmailAddress().WithMessage("Please enter a valid email address.");
+
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Password is required.");
+        }
+    }
+}

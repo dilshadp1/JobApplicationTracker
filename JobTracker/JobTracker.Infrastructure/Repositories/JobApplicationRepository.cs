@@ -1,14 +1,18 @@
 ﻿using JobTracker.Application.Interfaces;
 using JobTracker.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using JobTracker.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobTracker.Infrastructure.Repositories
 {
-    public class JobApplicationRepository(GenericRepository<JobApplication>) : IJobApplicationRepository
+    public class JobApplicationRepository(ApplicationDbContext context) : GenericRepository<JobApplication>(context), IJobApplicationRepository
     {
+        public async Task<List<JobApplication>> GetApplicationsWithDetailsAsync(int userId)
+        {
+            return await context.JobApplications.Where(j => j.UserId == userId)
+                .Include(o => o.Offer)
+                .Include(i => i.Interviews)
+                .ToListAsync();
+        }
     }
 }

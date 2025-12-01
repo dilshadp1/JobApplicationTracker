@@ -1,4 +1,4 @@
-﻿using JobTracker.Application.Command.CreateInterview;
+﻿using JobTracker.Application.Command.InterviewCommands.CreateInterview;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
