@@ -1,1 +1,160 @@
-<p>register-user works!</p>
+<div class="register-page">
+  <!-- Decorative Shapes -->
+  <div class="background-shape shape-1"></div>
+  <div class="background-shape shape-2"></div>
+
+  <div class="container d-flex justify-content-center align-items-center min-vh-100 py-5 position-relative">
+    <div class="card register-card shadow-lg border-0">
+      <div class="card-body p-5">
+        
+        <!-- Header -->
+        <div class="text-center mb-4">
+          <div class="brand-logo mb-3">
+            <i class="bi bi-person-plus-fill"></i>
+          </div>
+          <h2 class="fw-bold text-dark">Create Account</h2>
+          <p class="text-muted">Join JobTracker to manage your career.</p>
+        </div>
+        
+        <!-- Error Alert -->
+        @if (errorMessage) {
+          <div class="alert alert-danger d-flex align-items-center fade show" role="alert">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+            <div>{{ errorMessage }}</div>
+          </div>
+        }
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          
+          <!-- Row 1: Names -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="firstName" formControlName="firstName" 
+                       [class.is-invalid]="isFieldInvalid('firstName')" placeholder="John">
+                <label for="firstName">First Name</label>
+                @if (isFieldInvalid('firstName')) {
+                  <div class="invalid-feedback text-start">
+                    @if (registerForm.get('firstName')?.hasError('required')) { Name is required. }
+                    @if (registerForm.get('firstName')?.hasError('minlength')) { Min 3 characters. }
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="lastName" formControlName="lastName" 
+                       [class.is-invalid]="isFieldInvalid('lastName')" placeholder="Doe">
+                <label for="lastName">Last Name</label>
+                @if (isFieldInvalid('lastName')) {
+                  <div class="invalid-feedback text-start">Last Name is required.</div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="email" formControlName="email" 
+                   [class.is-invalid]="isFieldInvalid('email')" placeholder="name@example.com">
+            <label for="email">Email address</label>
+            @if (isFieldInvalid('email')) {
+              <div class="invalid-feedback text-start">Valid email is required.</div>
+            }
+          </div>
+
+          <!-- Phone -->
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="phone" formControlName="phone" 
+                   [class.is-invalid]="isFieldInvalid('phone')" placeholder="1234567890">
+            <label for="phone">Phone (10 digits)</label>
+            @if (isFieldInvalid('phone')) {
+              <div class="invalid-feedback text-start">
+                @if (registerForm.get('phone')?.hasError('required')) { Phone is required. }
+                @else { Must be exactly 10 digits. }
+              </div>
+            }
+          </div>
+
+          <!-- Row 2: Passwords -->
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <!-- Password Field -->
+              <div class="form-floating">
+                <input type="password" class="form-control" id="password" formControlName="password" 
+                       [class.is-invalid]="isFieldInvalid('password')" 
+                       [class.is-valid]="isPasswordValid"
+                       placeholder="Password">
+                <label for="password">Password</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <!-- Confirm Password Field -->
+              <div class="form-floating">
+                <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword" 
+                       [class.is-invalid]="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.dirty"
+                       [class.is-valid]="!registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.dirty && registerForm.get('confirmPassword')?.value"
+                       placeholder="Confirm Password">
+                <label for="confirmPassword">Confirm Password</label>
+                
+                <!-- Error Message -->
+                @if (registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.dirty) {
+                  <div class="invalid-feedback text-start d-block">Passwords do not match.</div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Password Validation Checklist -->
+          @if ((registerForm.get('password')?.dirty || registerForm.get('password')?.touched) && !isPasswordValid) {
+            <div class="password-requirements mb-4 p-3 rounded fade-in">
+              <p class="mb-2 small fw-bold text-muted">Password requirements:</p>
+              <ul class="list-unstyled mb-0 small">
+                <li [class.text-success]="hasMinLength" [class.text-muted]="!hasMinLength">
+                  <i class="bi" [class.bi-check-circle-fill]="hasMinLength" [class.bi-circle]="!hasMinLength"></i> 
+                  At least 6 characters
+                </li>
+                <li [class.text-success]="hasUpperCase" [class.text-muted]="!hasUpperCase">
+                  <i class="bi" [class.bi-check-circle-fill]="hasUpperCase" [class.bi-circle]="!hasUpperCase"></i> 
+                  One uppercase letter
+                </li>
+                <li [class.text-success]="hasLowerCase" [class.text-muted]="!hasLowerCase">
+                  <i class="bi" [class.bi-check-circle-fill]="hasLowerCase" [class.bi-circle]="!hasLowerCase"></i> 
+                  One lowercase letter
+                </li>
+                <li [class.text-success]="hasNumber" [class.text-muted]="!hasNumber">
+                  <i class="bi" [class.bi-check-circle-fill]="hasNumber" [class.bi-circle]="!hasNumber"></i> 
+                  One number
+                </li>
+                <li [class.text-success]="hasSymbol" [class.text-muted]="!hasSymbol">
+                  <i class="bi" [class.bi-check-circle-fill]="hasSymbol" [class.bi-circle]="!hasSymbol"></i> 
+                  One special character
+                </li>
+              </ul>
+            </div>
+          }
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary w-100 py-3 fw-bold btn-register" 
+                  [disabled]="registerForm.invalid || isLoading">
+            @if (isLoading) {
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              Creating Account...
+            } @else {
+              Sign Up
+            }
+          </button>
+
+          <!-- Login Link -->
+          <div class="text-center mt-4">
+            <p class="mb-0 text-muted">
+              Already have an account? 
+              <a routerLink="/login" class="text-primary fw-semibold text-decoration-none hover-link">Login here</a>
+            </p>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

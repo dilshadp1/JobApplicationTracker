@@ -18,6 +18,11 @@ export const userRoutes: Routes = [
         loadComponent: () => import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
         title: 'Dashboard'
       },
+      {
+        path: 'profile', 
+        loadComponent: () => import('../profile/profile/profile.component').then(m => m.ProfileComponent),
+        title:'My Profile'
+      },
       { 
         path: 'jobs', 
         loadComponent: () => import('./job-list/job-list.component').then(m => m.JobListComponent),
