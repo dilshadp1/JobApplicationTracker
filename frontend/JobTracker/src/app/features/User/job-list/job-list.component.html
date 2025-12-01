@@ -1,1 +1,35 @@
 <p>job-list works!</p>
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Position</th>
+        <th>AppliedDate</th>
+        <th>CurrentStatus</th>
+        <th>JobUrl</th>
+        <th>SalaryExpectation</th>
+        <th>Notes</th>
+        <th>InterviewCount</th>
+        <th>OfferStatus</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (application of applications; track application.id) {
+      <tr>
+        <td>#{{ application.company }}</td>
+        <td>{{ application.position }}</td>
+        <td>{{ application.appliedDate }}</td>
+        <td>{{ application.currentStatus }}</td>
+        <td>{{ application.jobUrl }}</td>
+        <td>{{ application.salaryExpectation }}</td>
+        <td>{{ application.notes }}</td>
+        <td>{{ application.interviewCount }}</td>
+        <td>{{ application.offerStatus }}</td>
+
+        
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

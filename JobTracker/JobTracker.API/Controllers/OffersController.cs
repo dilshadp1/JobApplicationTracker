@@ -1,4 +1,4 @@
-﻿using JobTracker.Application.Command.CreateOffer;
+﻿using JobTracker.Application.Command.OfferCommands.CreateOffer;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
