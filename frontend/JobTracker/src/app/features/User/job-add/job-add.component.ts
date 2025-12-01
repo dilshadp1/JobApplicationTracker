@@ -1,10 +1,31 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { JobApplicationService } from '../../../core/services/job-application.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-job-add',
-  imports: [RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl: './job-add.component.html',
   styleUrl: './job-add.component.scss',
 })
-export class JobAddComponent {}
+export class JobAddComponent {
+  jobForm = new FormGroup({
+    company: new FormControl(''),
+    position: new FormControl(''),
+    jobUrl: new FormControl(''),
+    salaryExpectation: new FormControl(''),
+    notes: new FormControl(''),
+  });
+
+  constructor(private jobApplicationService: JobApplicationService, private router : Router) {}
+
+  public onSubmit(){
+    const jobData=this.jobForm.value;
+    this.jobApplicationService.addJob(jobData).subscribe(()=>
+    {
+      this.router.navigate(['/jobs']);
+    });
+    
+  }
+}

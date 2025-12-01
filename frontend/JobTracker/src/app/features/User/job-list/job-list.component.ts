@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { JobApplicationService } from '../../../core/services/job-application.service';
 import { JobApplication } from '../../models/job-application';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-job-list',
-  imports: [RouterLink],
+  imports: [DatePipe],
   templateUrl: './job-list.component.html',
   styleUrl: './job-list.component.scss',
 })

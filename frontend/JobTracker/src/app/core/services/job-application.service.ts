@@ -8,7 +8,7 @@ import { JobApplication } from '../../features/models/job-application';
 })
 export class JobApplicationService {
 
-  private apiUrl='https://localhost:5001/api/jobapplications'
+  private apiUrl='https://localhost:7126/api/jobapplications'
   constructor(private http: HttpClient) { }
 
   getApplications() : Observable<JobApplication[]>{

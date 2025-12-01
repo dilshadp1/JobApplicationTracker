@@ -17,17 +17,15 @@
     <tbody>
       @for (application of applications; track application.id) {
       <tr>
-        <td>#{{ application.company }}</td>
+        <td>{{ application.company }}</td>
         <td>{{ application.position }}</td>
-        <td>{{ application.appliedDate }}</td>
+        <td>{{ application.appliedDate | date }}</td>
         <td>{{ application.currentStatus }}</td>
         <td>{{ application.jobUrl }}</td>
         <td>{{ application.salaryExpectation }}</td>
         <td>{{ application.notes }}</td>
         <td>{{ application.interviewCount }}</td>
         <td>{{ application.offerStatus }}</td>
-
-        
       </tr>
       }
     </tbody>
