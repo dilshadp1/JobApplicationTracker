@@ -1,0 +1,95 @@
+/* Base Card Styling */
+.stat-card {
+  /* Using 135deg makes the gradient flow diagonally from top-left to bottom-right */
+  background: linear-gradient(135deg, #4c6691 0%, #0dcaf0 100%);
+  border-radius: 12px; /* Slightly softer corners */
+  padding: 1rem;
+  position: relative;
+  /* Softer, colored shadow to match the theme */
+  box-shadow: 0 10px 20px -10px rgba(13, 202, 240, 0.4);
+  transition: all 0.3s ease;
+  color: #fff;
+  border-bottom: 4px solid transparent;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden; /* Ensures content doesn't spill if we add effects */
+}
+
+/* Hover Effect: Lift up and glow */
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px -10px rgba(13, 202, 240, 0.6);
+}
+
+.stat-content {
+  flex: 1;
+  padding-right: 12px;
+  z-index: 2;
+}
+
+/* Typography */
+.stat-number {
+  font-size: 2rem;
+  font-weight: 800; /* Extra bold for impact */
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle depth */
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  /* CRITICAL CHANGE: Use transparent white instead of grey */
+  color: rgba(255, 255, 255, 0.85); 
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Icon Container - The "Pop" Factor */
+.icon-box {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 2;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+  pointer-events: none;
+}
+
+/* --- Missing Bootstrap Custom Colors --- */
+
+/* Defines text-purple for the Offers icon */
+.text-purple {
+  color: #8950fc !important;
+}
+
+/* Defines text-orange for the Declined icon */
+.text-orange {
+  color: #fd7e14 !important; /* A nice vibrant orange */
+}
+
+/* Optional: Ensure text-warning is visible if you use it */
+.text-warning {
+  color: #ffc107 !important;
+}

@@ -4,6 +4,7 @@ using JobTracker.Application.Command.AuthenticationCommands.LoginCommand;
 using JobTracker.Application.Command.UserCommands.CreateUser;
 using JobTracker.Application.DTO;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JobTracker.API.Controllers

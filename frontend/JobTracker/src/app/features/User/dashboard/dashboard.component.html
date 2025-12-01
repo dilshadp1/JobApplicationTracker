@@ -1,1 +1,88 @@
-<p>dashboard works!</p>
+<div class="container-fluid mt-4">
+
+  <div class="row g-3"> <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card card-yellow">
+          <div class="stat-content">
+             <div class="stat-number">{{ stats?.totalApplications }}</div>
+             <div class="stat-label">Total</div>
+          </div>
+          <div class="icon-box">
+             <i class="bi bi-briefcase-fill text-warning"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card card-blue">
+          <div class="stat-content">
+             <div class="stat-number">{{ stats?.interviewing }}</div>
+             <div class="stat-label">Interviews</div>
+          </div>
+          <div class="icon-box">
+             <i class="bi bi-calendar-check-fill text-primary"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card card-purple">
+          <div class="stat-content">
+             <div class="stat-number">{{ stats?.offers }}</div>
+             <div class="stat-label">Offers</div>
+          </div>
+          <div class="icon-box">
+             <i class="bi bi-gift-fill text-purple"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card card-green">
+          <div class="stat-content">
+             <div class="stat-number">{{ stats?.hired || 0 }}</div>
+             <div class="stat-label">Hired</div>
+          </div>
+          <div class="icon-box">
+             <i class="bi bi-check-circle-fill text-success"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card card-red">
+          <div class="stat-content">
+             <div class="stat-number">{{ stats?.rejected }}</div>
+             <div class="stat-label">Rejected</div>
+          </div>
+          <div class="icon-box">
+             <i class="bi bi-x-circle-fill text-danger"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="stat-card card-orange">
+          <div class="stat-content">
+             <div class="stat-number">{{ stats?.declined }}</div>
+             <div class="stat-label">Declined</div>
+          </div>
+          <div class="icon-box">
+             <i class="bi bi-dash-circle-fill text-orange"></i>
+          </div>
+        </div>
+      </div>
+
+  </div>
+  <div class="row">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="fw-bold text-dark">
+            <i class="bi bi-clock-history me-2 text-primary"></i>Upcoming Interviews
+          </h4>
+        </div>
+        
+        <!-- Pass the data down using [interviews] -->
+        <app-upcoming-interviews [interviews]="stats?.upcomingInterviews ?? []"></app-upcoming-interviews>        
+      </div>
+    </div>
+</div>
