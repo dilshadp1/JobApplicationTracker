@@ -1,1 +1,8 @@
 <p>job-add works!</p>
+<form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+    <input type="text" formControlName="company" placeholder="Company Name" />
+    <input type="text" formControlName="position" placeholder="Position Name" />
+    <input type="text" formControlName="jobUrl" placeholder="Link to the Job" />
+    <input type="number" formControlName="salaryExpectation" placeholder="Expected Salary" />
+    <textarea formControlName="notes" placeholder="Further Details..." ></textarea>
+</form>

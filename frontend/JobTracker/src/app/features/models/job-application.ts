@@ -3,7 +3,7 @@ export interface JobApplication {
   company: string;
   position: string;
   appliedDate: Date;
-  currentStatus: number;
+  currentStatus: string;
   jobUrl?: string;
   salaryExpectation?: number;
   notes?: string;
