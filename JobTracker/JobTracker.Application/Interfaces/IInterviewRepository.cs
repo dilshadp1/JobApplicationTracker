@@ -10,5 +10,7 @@ namespace JobTracker.Application.Interfaces
     public interface IInterviewRepository : IGenericRepository<Interview>
     {
         Task<List<Interview>> GetInterviewsWithJobDetailsAsync(int userId);
+        Task<List<Interview>> GetAllInterviewsByUserIdAsync(int userId);
+        Task<Interview?> GetInterviewByIdWithJobAsync(int id);
     }
 }

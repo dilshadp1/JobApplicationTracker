@@ -5,6 +5,7 @@ namespace JobTracker.Application.Command.JobApplicationCommands.CreateJobApplica
 {
     public class CreateJobApplicationCommand : IRequest<int>
     {
+        public int UserId { get; set; }
         public string Company { get; set; }
         public string Position { get; set; }
         public ApplicationStatus Status { get; set; }

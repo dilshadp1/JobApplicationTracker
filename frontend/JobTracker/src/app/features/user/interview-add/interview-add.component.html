@@ -1,0 +1,95 @@
+<div class="form-wrapper">
+  <div class="form-card">
+    <div class="card-header">
+      <h2>
+        <i
+          class="fa-solid"
+          [class.fa-calendar-plus]="!isEditMode"
+          [class.fa-pen]="isEditMode"
+        ></i>
+        {{ isEditMode ? "Edit Interview" : "Schedule Interview" }}
+      </h2>
+    </div>
+
+    <form [formGroup]="interviewForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Job Application <span class="required">*</span></label>
+        <select formControlName="applicationId">
+          <option [ngValue]="null" disabled>
+            Select the job application...
+          </option>
+          @for(job of userJobs; track job.id) {
+          <option [ngValue]="job.id">
+            {{ job.company }} - {{ job.position }}
+          </option>
+          }
+        </select>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Round Name</label>
+          <input
+            type="text"
+            formControlName="roundName"
+            placeholder="e.g. Technical Round 1"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Date & Time</label>
+          <input type="datetime-local" formControlName="interviewDate" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Mode</label>
+          <select formControlName="mode">
+            <option [ngValue]="0">Online</option>
+            <option [ngValue]="1">Offline</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select formControlName="status">
+            <option [ngValue]="0">Scheduled</option>
+            <option [ngValue]="1">Completed</option>
+            <option [ngValue]="2">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Meeting Link / Address</label>
+        <input
+          type="text"
+          formControlName="locationUrl"
+          placeholder="Zoom Link or Office Address"
+        />
+      </div>
+
+      <div class="form-group full-width">
+        <label>Feedback / Notes</label>
+        <textarea formControlName="feedback" rows="3"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <a routerLink="/user/interviews" class="btn-cancel">Cancel</a>
+        <button
+          type="submit"
+          class="btn-save"
+          [disabled]="!interviewForm.valid"
+        >
+          Save Interview
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<div style="background: #eee; padding: 20px; margin-top: 20px; border: 2px dashed red;">
+  <h3>🔍 Form Debugger</h3>
+  <p><strong>Form Status:</strong> {{ interviewForm.status }}</p>
+  <p><strong>Is Valid?</strong> {{ interviewForm.valid }}</p>
+  <pre>{{ interviewForm.value | json }}</pre>
+</div>

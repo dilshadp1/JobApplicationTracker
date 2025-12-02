@@ -7,31 +7,29 @@ using MediatR;
 
 namespace JobTracker.Application.Query.JobApplicationsQuery.GetJobApplications
 {
-    public class GetJobApplicationsQueryHandler : IRequestHandler<GetJobApplicationsQuery, List<JobApplicationDto>>
+    namespace JobTracker.Application.Query.JobApplicationsQuery.GetJobApplications
     {
-        private readonly IJobApplicationRepository _jobApplicationRepository;
-        public GetJobApplicationsQueryHandler(IJobApplicationRepository jobApplicationRepository)
+        public class GetJobApplicationsQueryHandler(IJobApplicationRepository jobApplicationRepository)
+            : IRequestHandler<GetJobApplicationsQuery, List<JobApplicationDto>>
         {
-            _jobApplicationRepository = jobApplicationRepository;
-        }
-        public async Task<List<JobApplicationDto>> Handle(GetJobApplicationsQuery query, CancellationToken cancellationToken)
-        {
-            List<JobApplication> jobs = await _jobApplicationRepository.GetApplicationsWithDetailsAsync(query.UserId);
-            return jobs.Select(j => new JobApplicationDto
+            public async Task<List<JobApplicationDto>> Handle(GetJobApplicationsQuery query, CancellationToken cancellationToken)
             {
-                Company = j.Company,
-                Position = j.Position,
-                AppliedDate = j.AppliedDate,
-                CurrentStatus = j.Status,
-                JobUrl = j.JobUrl,
-                SalaryExpectation = j.SalaryExpectation,
-                Notes = j.Notes,
+                List<JobApplication> jobs = await jobApplicationRepository.GetJobApplicationsWithDetailsAsync(query.UserId);
 
-                InterviewCount = j.Interviews.Count,
-                
-                OfferStatus= j.Offer==null ? "Pending" : "Received",
-
-            }).ToList();
+                return jobs.Select(j => new JobApplicationDto
+                {
+                    Id = j.Id,
+                    Company = j.Company,
+                    Position = j.Position,
+                    AppliedDate = j.AppliedDate,
+                    CurrentStatus = j.Status,
+                    JobUrl = j.JobUrl,
+                    SalaryExpectation = j.SalaryExpectation,
+                    Notes = j.Notes,
+                    InterviewCount = j.Interviews.Count,
+                    OfferStatus = j.Offer == null ? "Pending" : "Received",
+                }).ToList();
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ namespace JobTracker.Application.Command.InterviewCommands.CreateInterview
 {
     public class CreateInterviewCommand : IRequest<int>
     {
+        public int UserId { get; set; }
         public int ApplicationId { get; set; }
         public DateTime InterviewDate { get; set; }
         public string RoundName { get; set; }

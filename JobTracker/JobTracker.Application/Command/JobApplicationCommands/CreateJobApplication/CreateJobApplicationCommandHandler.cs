@@ -9,7 +9,7 @@ namespace JobTracker.Application.Command.JobApplicationCommands.CreateJobApplica
         public async Task<int> Handle(CreateJobApplicationCommand request, CancellationToken cancellationToken)
         {
             JobApplication newJobApplication = new JobApplication(
-                1,
+                request.UserId,
                 request.Company,
                 request.Position,
                 request.AppliedDate,

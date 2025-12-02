@@ -8,12 +8,20 @@ namespace JobTracker.Infrastructure.Repositories
 {
     public class JobApplicationRepository(ApplicationDbContext context) : GenericRepository<JobApplication>(context), IJobApplicationRepository
     {
-        public async Task<List<JobApplication>> GetApplicationsWithDetailsAsync(int userId)
+        public async Task<List<JobApplication>> GetJobApplicationsWithDetailsAsync(int userId)
         {
             return await context.JobApplications.Where(j => j.UserId == userId)
                 .Include(o => o.Offer)
                 .Include(i => i.Interviews)
                 .ToListAsync();
+        }
+
+        public async Task<JobApplication?> GetJobApplicationByIdWithDetailsAsync(int jobId, int userId)
+        {
+            return await context.JobApplications.Where(j => j.UserId == userId && j.Id == jobId)
+                .Include(o => o.Offer)
+                .Include(i => i.Interviews)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Dictionary<ApplicationStatus, int>> GetJobStatsByUserIdAsync(int userId)
@@ -39,6 +47,20 @@ namespace JobTracker.Infrastructure.Repositories
                 .OrderByDescending(j => j.UpdatedAt)
                 .Take(count)
                 .ToListAsync();
+        }
+
+
+        public async Task<bool> IsJobOwnedByUserAsync(int jobId, int userId)
+        {
+            // This runs a "SELECT 1" or "EXISTS" query, not a "SELECT *"
+            return await context.JobApplications
+                .AnyAsync(j => j.Id == jobId && j.UserId == userId);
+        }
+        public async Task<JobApplication?> GetJobWithOfferAsync(int jobId)
+        {
+            return await context.JobApplications
+                .Include(j => j.Offer) // Join with Offer table
+                .FirstOrDefaultAsync(j => j.Id == jobId);
         }
 
 

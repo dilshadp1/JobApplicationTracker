@@ -27,7 +27,7 @@ namespace JobTracker.Application.Command.AuthenticationCommands.CreateRefreshTok
             if (storedToken.ExpiryDate < DateTime.UtcNow)
                 throw new UnauthorizedAccessException("Expired refresh token.");
 
-            var user = await userRepository.GetByIdAsync(storedToken.UserId);
+            var user = await userRepository.GetByIdAsync(storedToken.UserId); //User?
 
             if (user == null)
                 throw new UnauthorizedAccessException("User not found.");
@@ -36,14 +36,14 @@ namespace JobTracker.Application.Command.AuthenticationCommands.CreateRefreshTok
             string newRefreshTokenRaw = tokenGenerator.GenerateRefreshToken();
             string newRefreshTokenHash = RefreshToken.ComputeHash(newRefreshTokenRaw);
 
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))//TransactionScope
             {
                 try
                 {
                     storedToken.Revoke(newRefreshTokenHash);
                     await refreshRepo.UpdateAsync(storedToken);
 
-                    var newEntity = new RefreshToken(newRefreshTokenRaw, user.Id);
+                    var newEntity = new RefreshToken(newRefreshTokenRaw, user.Id);//refreshtoken
                     await refreshRepo.AddAsync(newEntity);
 
                     scope.Complete();
