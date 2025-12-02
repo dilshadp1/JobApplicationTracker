@@ -1,30 +1,41 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { MainLayoutComponent } from "../../../core/layout/main-layout/main-layout.component";
-import { RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ProfileService } from '../../../core/services/profile/profile.service';
+import { take } from 'rxjs';
+import { UserProfile } from '../../models/models/profile-model';
+
+export interface ProfileForm {
+  firstName: FormControl<string | null>;
+  lastName: FormControl<string | null>;
+  email: FormControl<string | null>;
+  phone: FormControl<string | null>;
+}
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent implements OnInit {
-  profileForm: FormGroup;
-  isEditing = signal(false); // Controls View vs Edit mode
-  isLoading = false;
-  initials = signal('');
+
+export class ProfileComponent  implements OnInit {
+  profileForm: FormGroup<ProfileForm>;
+  
+  isEditing = signal(false); 
+  isLoading = signal(false);
+  
+  errorMessage = '';
+  successMessage = '';
 
   private fb = inject(FormBuilder);
-  // private profileService = inject(ProfileService);
+  private profileService = inject(ProfileService);
 
   constructor() {
     this.profileForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(3)]],
-      lastName: ['', [Validators.required]],
-      email: [{ value: '', disabled: true }], // Locked forever
-      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]]
+      firstName: [{ value: '', disabled: true }],
+      lastName: [{ value: '', disabled: true }],
+      email: [{ value: '', disabled: true }], 
+      phone: [{ value: '', disabled: true }, [Validators.required, Validators.pattern(/^\d{10}$/)]]
     });
   }
 
@@ -33,56 +44,74 @@ export class ProfileComponent implements OnInit {
   }
 
   loadProfile() {
-    this.isLoading = true;
-    // For demo purposes, we can mock if backend isn't ready
-    // Replace this with actual service call: this.profileService.getProfile().subscribe(...)
+    this.isLoading.set(true);
     
-    // MOCK DATA (Remove this block when backend is ready)
-    // setTimeout(() => {
-    //   const mockData: UserProfile = {
-    //     firstName: 'Tinu',
-    //     lastName: 'Clara',
-    //     email: 'tinu@gmail.com',
-    //     phone: '9876543210'
-    //   };
-    //   this.patchForm(mockData);
-    //   this.isLoading = false;
-    // }, 1000);
+    this.profileService.getProfile().pipe(take(1)).subscribe({
+      next: (user) => {
+        this.patchForm(user);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to load profile', err);
+        this.errorMessage = 'Failed to load profile data.';
+        this.isLoading.set(false);
+      }
+    });
   }
 
-  // patchForm(user: UserProfile) {
-  //   this.profileForm.patchValue(user);
-  //   this.initials.set(`${user.firstName[0]}${user.lastName[0]}`.toUpperCase());
-  // }
+  patchForm(user: UserProfile) {
+    this.profileForm.patchValue(user);
+  }
 
   toggleEdit() {
     this.isEditing.update(v => !v);
+    this.successMessage = '';
+    this.errorMessage = '';
+
     if (this.isEditing()) {
       this.profileForm.enable();
+      
+      this.profileForm.get('firstName')?.disable(); 
+      this.profileForm.get('lastName')?.disable(); 
       this.profileForm.get('email')?.disable(); 
     } else {
-      this.profileForm.disable(); 
+      this.profileForm.disable();
+      this.loadProfile(); 
     }
+  }
+
+  cancelEdit() {
+    this.toggleEdit();
   }
 
   onSubmit() {
     if (this.profileForm.invalid) return;
     
-    this.isLoading = true;
-    const updateData = this.profileForm.getRawValue(); // Include disabled fields if needed
+    this.isLoading.set(true);
+    this.errorMessage = '';
+    this.successMessage = '';
 
-    console.log('Saving Profile:', updateData);
-    
-    // Simulate API Call
-    setTimeout(() => {
-      this.isLoading = false;
-      this.toggleEdit(); // Exit edit mode
-      // Show success toast here
-    }, 1500);
-  }
+    const rawValues = this.profileForm.getRawValue();
 
-  cancelEdit() {
-    this.toggleEdit();
-    this.loadProfile(); // Reset data
+    const updateData: Partial<UserProfile> = {
+      phone: rawValues.phone ?? ''
+    };
+
+    this.profileService.updateProfile(updateData).pipe(take(1)).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.successMessage = 'Phone number updated successfully!';
+        
+        this.isEditing.set(false);
+        this.profileForm.disable();
+        
+        this.profileForm.patchValue({ phone: updateData.phone });
+      },
+      error: (err) => {
+        console.error('Update failed', err);
+        this.errorMessage = 'Failed to update profile. Please try again.';
+        this.isLoading.set(false);
+      }
+    });
   }
 }

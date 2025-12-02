@@ -23,7 +23,7 @@ namespace JobTracker.API.Controllers
         [HttpGet]
         public async Task<ActionResult<DashboardStatsDto>> GetStats()
         {
-            var stats = await _mediator.Send(new GetDashboardStatsQuery());
+            DashboardStatsDto stats = await _mediator.Send(new GetDashboardStatsQuery());
             return Ok(stats);
         }
     }

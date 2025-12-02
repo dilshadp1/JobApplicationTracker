@@ -6,17 +6,12 @@ using MediatR;
 
 namespace JobTracker.Application.Command.AuthenticationCommands.CreateRefreshToken
 {
-    public class CreateRefreshTokenCommandHandler(
-
-         IGenericRepository<User> userRepository,
-         IGenericRepository<RefreshToken> refreshRepo,
-         IJwtTokenGenerator tokenGenerator
-        ) : IRequestHandler<CreateRefreshTokenCommand, AuthResponse>
+    public class CreateRefreshTokenCommandHandler(IGenericRepository<User> userRepository,IGenericRepository<RefreshToken> refreshRepo,IJwtTokenGenerator tokenGenerator) : IRequestHandler<CreateRefreshTokenCommand, AuthResponse>
     {
         public async Task<AuthResponse> Handle(CreateRefreshTokenCommand request, CancellationToken cancellationToken)
         {
             string incomingTokenHash = RefreshToken.ComputeHash(request.Token);
-            RefreshToken storedToken = await refreshRepo.GetFirstOrDefaultAsync(t => t.TokenHash == incomingTokenHash);
+            RefreshToken? storedToken = await refreshRepo.GetFirstOrDefaultAsync(t => t.TokenHash == incomingTokenHash);
 
             if (storedToken == null)
                 throw new UnauthorizedAccessException("Invalid refresh token.");
@@ -27,7 +22,7 @@ namespace JobTracker.Application.Command.AuthenticationCommands.CreateRefreshTok
             if (storedToken.ExpiryDate < DateTime.UtcNow)
                 throw new UnauthorizedAccessException("Expired refresh token.");
 
-            var user = await userRepository.GetByIdAsync(storedToken.UserId); //User?
+            User? user = await userRepository.GetByIdAsync(storedToken.UserId);
 
             if (user == null)
                 throw new UnauthorizedAccessException("User not found.");
@@ -36,10 +31,8 @@ namespace JobTracker.Application.Command.AuthenticationCommands.CreateRefreshTok
             string newRefreshTokenRaw = tokenGenerator.GenerateRefreshToken();
             string newRefreshTokenHash = RefreshToken.ComputeHash(newRefreshTokenRaw);
 
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))//TransactionScope
+            using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                try
-                {
                     storedToken.Revoke(newRefreshTokenHash);
                     await refreshRepo.UpdateAsync(storedToken);
 
@@ -47,11 +40,6 @@ namespace JobTracker.Application.Command.AuthenticationCommands.CreateRefreshTok
                     await refreshRepo.AddAsync(newEntity);
 
                     scope.Complete();
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
             }
 
             return new AuthResponse

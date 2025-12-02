@@ -12,7 +12,7 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-  token: string;
+  accessToken: string;
 }
 
 export interface User {

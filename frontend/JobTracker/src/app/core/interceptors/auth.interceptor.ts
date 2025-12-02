@@ -22,11 +22,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         return authService.refreshToken().pipe(
           switchMap((response) => {
             const newReq = req.clone({
-              setHeaders: { Authorization: `Bearer ${response.token}` }
+              setHeaders: { Authorization: `Bearer ${response.accessToken}` }
             });
             return next(newReq);
           }),
           catchError((refreshErr) => {
+            authService.logout();
             router.navigate(['/login']);
             return throwError(() => refreshErr);
           })

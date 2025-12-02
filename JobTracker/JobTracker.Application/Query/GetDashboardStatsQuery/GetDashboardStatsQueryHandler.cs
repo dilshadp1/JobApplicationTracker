@@ -30,7 +30,7 @@ namespace JobTracker.Application.Query.GetDashboardStatsQuery
             int GetCount(ApplicationStatus status) => statsMap.GetValueOrDefault(status, 0);
             int totalApplications = statsMap.Values.Sum();
 
-            var upcomingInterviews = interviews.Select(i => new UpcomingInterviewDto
+            List<UpcomingInterviewDto> upcomingInterviews = interviews.Select(i => new UpcomingInterviewDto
             {
                 InterviewId = i.Id,
                 Date = i.InterviewDate,
@@ -40,7 +40,7 @@ namespace JobTracker.Application.Query.GetDashboardStatsQuery
                 Position = i.JobApplication.Position
             }).ToList();
 
-            var recentActivities = recentJobs.Select(j => new RecentActivityDto
+            List<RecentActivityDto> recentActivities = recentJobs.Select(j => new RecentActivityDto
             {
                 JobId = j.Id,
                 Company = j.Company,

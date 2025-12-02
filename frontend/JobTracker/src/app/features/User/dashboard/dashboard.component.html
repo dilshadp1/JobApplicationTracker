@@ -1,99 +1,57 @@
 <div class="container-fluid mt-4">
 
-  <div class="row g-3"> <div class="col-6 col-md-4 col-lg-2">
-        <div class="stat-card card-yellow">
-          <div class="stat-content">
-             <div class="stat-number">{{ stats?.totalApplications }}</div>
-             <div class="stat-label">Total</div>
-          </div>
-          <div class="icon-box">
-             <i class="bi bi-briefcase-fill text-warning"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="stat-card card-blue">
-          <div class="stat-content">
-             <div class="stat-number">{{ stats?.interviewing }}</div>
-             <div class="stat-label">Interviews</div>
-          </div>
-          <div class="icon-box">
-             <i class="bi bi-calendar-check-fill text-primary"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="stat-card card-purple">
-          <div class="stat-content">
-             <div class="stat-number">{{ stats?.offers }}</div>
-             <div class="stat-label">Offers</div>
-          </div>
-          <div class="icon-box">
-             <i class="bi bi-gift-fill text-purple"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="stat-card card-green">
-          <div class="stat-content">
-             <div class="stat-number">{{ stats?.hired || 0 }}</div>
-             <div class="stat-label">Hired</div>
-          </div>
-          <div class="icon-box">
-             <i class="bi bi-check-circle-fill text-success"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="stat-card card-red">
-          <div class="stat-content">
-             <div class="stat-number">{{ stats?.rejected }}</div>
-             <div class="stat-label">Rejected</div>
-          </div>
-          <div class="icon-box">
-             <i class="bi bi-x-circle-fill text-danger"></i>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="stat-card card-orange">
-          <div class="stat-content">
-             <div class="stat-number">{{ stats?.declined }}</div>
-             <div class="stat-label">Declined</div>
-          </div>
-          <div class="icon-box">
-             <i class="bi bi-dash-circle-fill text-orange"></i>
-          </div>
-        </div>
-      </div>
-
-  </div>
-<div class="row g-4 mt-2">
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+  } 
   
-  <div class="col-lg-8">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="fw-bold text-dark m-0">
-        <i class="bi bi-clock-history me-2 text-primary"></i>Upcoming Interviews
-      </h5>
-      <a routerLink="/user/interviews" class="text-decoration-none small fw-bold">View All</a>
+  @else {
+    <!-- 1. Stats Cards Grid (Generated Dynamically) -->
+    <div class="row g-3">
+      @for (card of statCards(); track card.label) {
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="stat-card" [ngClass]="card.colorClass">
+            <div class="stat-content">
+              <div class="stat-number">{{ card.value }}</div>
+              <div class="stat-label">{{ card.label }}</div>
+            </div>
+            <div class="icon-box">
+              <i class="bi" [ngClass]="[card.icon, card.textClass]"></i>
+            </div>
+          </div>
+        </div>
+      }
     </div>
-    
-    <app-upcoming-interviews [interviews]="stats?.upcomingInterviews ?? []"></app-upcoming-interviews>
-  </div>
 
-  <div class="col-lg-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="fw-bold text-dark mb-0">
-      <i class="bi bi-activity me-2 text-info"></i>Recent Activity
-    </h5>
+    <!-- 2. Split View: Interviews & Activity -->
+    <div class="row g-4 mt-2">
+      
+      <!-- Left: Upcoming Interviews -->
+      <div class="col-lg-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold text-dark m-0">
+            <i class="bi bi-clock-history me-2 text-primary"></i>Upcoming Interviews
+          </h5>
+          <a routerLink="/user/interviews" class="text-decoration-none small fw-bold">View All</a>
+        </div>
+        
+        <!-- Pass Signal value using () -->
+        <app-upcoming-interviews [interviews]="stats()?.upcomingInterviews ?? []"></app-upcoming-interviews>
+      </div>
+
+      <!-- Right: Recent Activity -->
+      <div class="col-lg-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold text-dark mb-0">
+            <i class="bi bi-activity me-2 text-info"></i>Recent Activity
+          </h5>
+        </div>
+        
+        <app-recent-activity [activities]="stats()?.recentActivities ?? []"></app-recent-activity>
+      </div>
+
     </div>
-     <app-recent-activity [activities]="stats?.recentActivities ?? []"></app-recent-activity>
-  </div>
-
+  }
 </div>
-    </div>

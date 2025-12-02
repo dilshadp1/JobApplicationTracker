@@ -14,10 +14,10 @@ namespace JobTracker.Infrastructure.Repositories
     {
         public async Task<List<Interview>> GetInterviewsWithJobDetailsAsync(int userId)
         {
-            var now = DateTime.UtcNow;
-            var nextWeek = now.AddDays(7);
+            DateTime now = DateTime.UtcNow;
+            DateTime nextWeek = now.AddDays(7);
 
-            return await context.Interviews
+            return await _context.Interviews
                 .Include(i => i.JobApplication) 
                 .Where(i => i.JobApplication.UserId == userId
                             && i.InterviewDate >= now

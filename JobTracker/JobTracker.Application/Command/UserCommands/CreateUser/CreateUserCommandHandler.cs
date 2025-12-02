@@ -12,7 +12,7 @@ namespace JobTracker.Application.Command.UserCommands.CreateUser
             bool userExists = await userRepository.AnyAsync(u => u.Email == request.Email);
             if (userExists)
             {
-                throw new Exception("User with this email already exists.");
+                throw new InvalidOperationException("User with this email already exists.");
             }
 
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);

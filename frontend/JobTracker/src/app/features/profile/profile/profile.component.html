@@ -2,52 +2,51 @@
   <div class="row justify-content-center">
     <div class="col-lg-8">
       
-      <!-- Profile Card -->
       <div class="card glass-card border-0 shadow-lg position-relative overflow-hidden">
         
-        <!-- Background Banner Effect -->
         <div class="profile-banner"></div>
 
         <div class="card-body p-5 pt-0 position-relative">
           
-          <!-- Avatar Section (Overlapping Banner) -->
           <div class="text-center mb-4 mt-n5">
             <div class="profile-avatar shadow-lg mx-auto mb-3">
-              {{ initials() }}
+              <i class="bi bi-person-fill" style="font-size: 4rem;"></i>
             </div>
-            <h2 class="fw-bold text-dark mb-1">
-              {{ profileForm.get('firstName')?.value }} {{ profileForm.get('lastName')?.value }}
-            </h2>
-            <p class="text-muted mb-0">{{ profileForm.get('email')?.value }}</p>
-            <span class="badge bg-soft-primary text-primary mt-2 px-3 py-2 rounded-pill">User Account</span>
+            
+            <div class="mt-3">
+              <h2 class="fw-bold text-dark mb-1">
+                {{ profileForm.get('firstName')?.value }} {{ profileForm.get('lastName')?.value }}
+              </h2>
+              <p class="text-muted mb-0">{{ profileForm.get('email')?.value }}</p>
+            </div>
           </div>
 
-          <!-- Divider -->
           <hr class="my-4 text-muted opacity-25">
 
-          <!-- Form Section -->
+          @if (errorMessage) {
+            <div class="alert alert-danger">{{ errorMessage }}</div>
+          }
+          @if (successMessage) {
+            <div class="alert alert-success">{{ successMessage }}</div>
+          }
+
           <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
             
             <div class="row g-4">
-              <!-- First Name -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label text-muted small fw-bold text-uppercase">First Name</label>
-                  <input type="text" class="form-control" formControlName="firstName" 
-                         [class.editable-field]="isEditing()">
+                  <input type="text" class="form-control" formControlName="firstName">
                 </div>
               </div>
 
-              <!-- Last Name -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label text-muted small fw-bold text-uppercase">Last Name</label>
-                  <input type="text" class="form-control" formControlName="lastName"
-                         [class.editable-field]="isEditing()">
+                  <input type="text" class="form-control" formControlName="lastName">
                 </div>
               </div>
 
-              <!-- Email (Locked) -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label text-muted small fw-bold text-uppercase">Email Address</label>
@@ -55,38 +54,36 @@
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock-fill"></i></span>
                     <input type="email" class="form-control bg-light border-start-0 text-muted" formControlName="email">
                   </div>
-                  <small class="text-muted fst-italic mt-1 d-block" *ngIf="isEditing()">Email cannot be changed.</small>
                 </div>
               </div>
 
-              <!-- Phone -->
               <div class="col-md-6">
                 <div class="form-group">
                   <label class="form-label text-muted small fw-bold text-uppercase">Phone Number</label>
                   <input type="text" class="form-control" formControlName="phone"
-                         [class.editable-field]="isEditing()">
+                         [class.editable-field]="isEditing()"
+                         [class.is-invalid]="isEditing() && profileForm.get('phone')?.invalid && (profileForm.get('phone')?.dirty || profileForm.get('phone')?.touched)">
+                  
+                  @if (isEditing() && profileForm.get('phone')?.invalid && (profileForm.get('phone')?.dirty || profileForm.get('phone')?.touched)) {
+                    <div class="text-danger small mt-1">Valid 10-digit phone required.</div>
+                  }
                 </div>
               </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="d-flex justify-content-end gap-3 mt-5">
-              
-              <!-- View Mode: Edit Button -->
               @if (!isEditing()) {
                 <button type="button" class="btn btn-primary px-4 py-2 fw-bold shadow-sm" (click)="toggleEdit()">
                   <i class="bi bi-pencil-square me-2"></i> Edit Profile
                 </button>
               }
 
-              <!-- Edit Mode: Save & Cancel -->
               @if (isEditing()) {
                 <button type="button" class="btn btn-light border px-4 py-2 fw-bold" (click)="cancelEdit()">
                   Cancel
                 </button>
-                <button type="submit" class="btn btn-success px-4 py-2 fw-bold shadow-sm" 
-                        [disabled]="profileForm.invalid || isLoading">
-                  @if (isLoading) {
+                <button type="submit" class="btn btn-success px-4 py-2 fw-bold shadow-sm" [disabled]="profileForm.invalid || isLoading()">
+                  @if (isLoading()) {
                     <span class="spinner-border spinner-border-sm me-2"></span> Saving...
                   } @else {
                     <i class="bi bi-check-lg me-2"></i> Save Changes

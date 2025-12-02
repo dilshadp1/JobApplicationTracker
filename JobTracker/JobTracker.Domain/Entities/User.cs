@@ -30,5 +30,10 @@ namespace JobTracker.Domain.Entities
             CreatedAt = DateTime.UtcNow;
             JobApplications = new List<JobApplication>();
         }
+
+        public void UpdateProfile(string phone)
+        {
+            Phone = phone;
+        }
     }
 }
