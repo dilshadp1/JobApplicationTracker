@@ -1,0 +1,44 @@
+<div class="card shadow-sm border-0 h-100">
+ 
+
+  <div class="card-body p-0">
+    <div class="scrollable-activity-list">
+    <div class="list-group list-group-flush">
+      
+      @for (activity of activities; track activity.jobId) {
+        <div class="list-group-item border-0 py-3 d-flex align-items-start">
+          
+          <div class="me-3 mt-1">
+            <span class="status-dot" [ngClass]="getStatusColor(activity.status)"></span>
+          </div>
+          
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-center">
+              <h6 class="mb-0 fw-bold text-dark">{{ activity.company }}</h6>
+              <small class="text-muted" style="font-size: 0.75rem;">
+                {{ activity.updatedAt | date:'MMM d' }}
+              </small>
+            </div>
+            
+            <p class="mb-1 small text-muted text-truncate" style="max-width: 200px;">
+              {{ activity.position }}
+            </p>
+            
+            <span class="badge rounded-pill fw-normal" 
+                  [ngClass]="'bg-light-' + getStatusColor(activity.status) + ' text-' + getStatusColor(activity.status)">
+              {{ activity.status }}
+            </span>
+          </div>
+        </div>
+      } 
+
+      @if (!activities|| activities.length === 0) {
+        <div class="text-center py-5 text-muted">
+          <i class="bi bi-inbox fs-4 d-block mb-2 text-secondary"></i>
+          <p class="small mb-0">No recent activity found.</p>
+        </div>
+      }
+    </div>
+  </div>
+  </div>
+</div>

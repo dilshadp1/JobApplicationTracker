@@ -25,7 +25,7 @@ export class AuthService {
   }
 
   login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request,{withCredentials:true}).pipe(
       tap(response => {
         if (response.token) {
           this.setSession(response.token);

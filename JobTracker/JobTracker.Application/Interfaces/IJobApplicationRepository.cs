@@ -7,5 +7,6 @@ namespace JobTracker.Application.Interfaces
     {
         Task<List<JobApplication>> GetApplicationsWithDetailsAsync(int userId);
         Task<Dictionary<ApplicationStatus, int>> GetJobStatsByUserIdAsync(int userId);
+        Task<List<JobApplication>> GetRecentApplicationsAsync(int userId, int count);
     }
 }

@@ -16,6 +16,8 @@ namespace JobTracker.Application.DTO
         public int Declined { get; set; }
 
         public List<UpcomingInterviewDto> UpcomingInterviews { get; set; } = new();
+        public List<RecentActivityDto> RecentActivities { get; set; } = new();
+
 
     }
 }

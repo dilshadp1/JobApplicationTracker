@@ -23,13 +23,14 @@ namespace JobTracker.Application.Query.GetDashboardStatsQuery
             int userId = _currentUser.UserId;
 
             Dictionary<ApplicationStatus, int> statsMap = await _jobRepo.GetJobStatsByUserIdAsync(userId);
+            IEnumerable<Interview> interviews = await _interviewRepo.GetInterviewsWithJobDetailsAsync(userId);
+            IEnumerable<JobApplication> recentJobs = await _jobRepo.GetRecentApplicationsAsync(userId, 5);
+
 
             int GetCount(ApplicationStatus status) => statsMap.GetValueOrDefault(status, 0);
             int totalApplications = statsMap.Values.Sum();
 
-            List<Interview> interviews = await _interviewRepo.GetInterviewsWithJobDetailsAsync(userId);
-
-            List<UpcomingInterviewDto> upcomingInterviews = interviews.Select(i => new UpcomingInterviewDto
+            var upcomingInterviews = interviews.Select(i => new UpcomingInterviewDto
             {
                 InterviewId = i.Id,
                 Date = i.InterviewDate,
@@ -37,6 +38,15 @@ namespace JobTracker.Application.Query.GetDashboardStatsQuery
                 Mode = i.Mode.ToString(),
                 Company = i.JobApplication.Company,
                 Position = i.JobApplication.Position
+            }).ToList();
+
+            var recentActivities = recentJobs.Select(j => new RecentActivityDto
+            {
+                JobId = j.Id,
+                Company = j.Company,
+                Position = j.Position,
+                Status = j.Status.ToString(),
+                UpdatedAt = j.UpdatedAt
             }).ToList();
 
             return new DashboardStatsDto
@@ -47,7 +57,8 @@ namespace JobTracker.Application.Query.GetDashboardStatsQuery
                 Rejected = GetCount(ApplicationStatus.Rejected),
                 Hired = GetCount(ApplicationStatus.Hired),
                 Declined = GetCount(ApplicationStatus.Declined),
-                UpcomingInterviews = upcomingInterviews
+                UpcomingInterviews = upcomingInterviews,
+                RecentActivities = recentActivities
             };
         }
     }

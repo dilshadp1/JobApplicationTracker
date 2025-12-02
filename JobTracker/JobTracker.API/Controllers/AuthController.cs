@@ -66,8 +66,9 @@ namespace JobTracker.API.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,  
-                Secure = true,   
-                SameSite = SameSiteMode.Strict, 
+                Secure = true,
+                Path = "/",
+                SameSite = SameSiteMode.None, 
                 Expires = DateTime.UtcNow.AddDays(7) 
             };
 
