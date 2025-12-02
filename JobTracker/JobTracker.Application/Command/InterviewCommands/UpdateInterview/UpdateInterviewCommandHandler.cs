@@ -35,3 +35,4 @@ namespace JobTracker.Application.Command.InterviewCommands.UpdateInterview
             return interview.Id;
         }
     }
+}

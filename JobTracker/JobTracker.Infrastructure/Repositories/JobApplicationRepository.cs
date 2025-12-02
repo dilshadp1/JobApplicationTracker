@@ -1,4 +1,5 @@
-﻿using JobTracker.Application.Interfaces;
+﻿using JobTracker.Application.DTO;
+using JobTracker.Application.Interfaces;
 using JobTracker.Domain.Entities;
 using JobTracker.Domain.Enums;
 using JobTracker.Infrastructure.Data;
@@ -10,7 +11,7 @@ namespace JobTracker.Infrastructure.Repositories
     {
         public async Task<List<JobApplication>> GetJobApplicationsWithDetailsAsync(int userId)
         {
-            return await context.JobApplications.Where(j => j.UserId == userId)
+            return await _context.JobApplications.Where(j => j.UserId == userId)
                 .Include(o => o.Offer)
                 .Include(i => i.Interviews)
                 .ToListAsync();
@@ -26,10 +27,10 @@ namespace JobTracker.Infrastructure.Repositories
 
         public async Task<Dictionary<ApplicationStatus, int>> GetJobStatsByUserIdAsync(int userId)
         {
-            var stats = await context.Set<JobApplication>()
+            List<JobStatDto>  stats = await _context.Set<JobApplication>()
                 .Where(j => j.UserId == userId)
                 .GroupBy(j => j.Status)
-                .Select(g => new
+                .Select(g => new JobStatDto 
                 {
                     Status = g.Key,
                     Count = g.Count()
@@ -41,7 +42,7 @@ namespace JobTracker.Infrastructure.Repositories
 
         public async Task<List<JobApplication>> GetRecentApplicationsAsync(int userId, int count)
         {
-            return await context.JobApplications
+            return await _context.JobApplications
                 .AsNoTracking()
                 .Where(j => j.UserId == userId)
                 .OrderByDescending(j => j.UpdatedAt)

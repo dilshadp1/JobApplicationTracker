@@ -21,14 +21,14 @@ export class AuthService {
   }
 
   register(request: RegisterRequest): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, request);
+    return this.http.post(`https://localhost:7126/api/User/register`, request);
   }
 
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request,{withCredentials:true}).pipe(
       tap(response => {
-        if (response.token) {
-          this.setSession(response.token);
+        if (response.accessToken) {
+          this.setSession(response.accessToken);
         }
       }),
       catchError(error => {
@@ -51,7 +51,7 @@ export class AuthService {
       withCredentials: true 
     }).pipe(
       tap(response => {
-        this.setSession(response.token);
+        this.setSession(response.accessToken);
       }),
       catchError(error => {
         this.logout();

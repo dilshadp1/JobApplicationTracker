@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { UpcomingInterview } from '../../../../../shared/models/upcoming-interview';
+import { UpcomingInterview } from '../../../../models/models/upcoming-interview';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 

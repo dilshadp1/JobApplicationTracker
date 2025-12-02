@@ -9,12 +9,11 @@ namespace JobTracker.Application.Command.AuthenticationCommands.LoginCommand
     {
         public async Task<AuthResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            var users = await userRepository.GetAsync(u => u.Email == request.Email);
-            var user = users.FirstOrDefault();
+            User? user = (await userRepository.GetAsync(u => u.Email == request.Email)).FirstOrDefault();
 
             if (user == null)
             {
-                throw new Exception("Invalid email");
+                throw new UnauthorizedAccessException("Invalid email or password.");
             }
 
 
@@ -22,13 +21,13 @@ namespace JobTracker.Application.Command.AuthenticationCommands.LoginCommand
 
             if (!isPasswordValid)
             {
-                throw new Exception("Incorrect password.");
+                throw new UnauthorizedAccessException("Invalid email or password.");
             }
 
             string accessToken = tokenGenerator.GenerateToken(user);
             string refreshTokenString = tokenGenerator.GenerateRefreshToken();
 
-            var refreshTokenEntity = new RefreshToken(refreshTokenString, user.Id);
+            RefreshToken refreshTokenEntity = new RefreshToken(refreshTokenString, user.Id);
             await refreshRepo.AddAsync(refreshTokenEntity);
 
             return new AuthResponse

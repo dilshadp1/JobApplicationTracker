@@ -8,28 +8,29 @@ namespace JobTracker.Infrastructure.Repositories
 {
     public class GenericRepository<T>(ApplicationDbContext context) : IGenericRepository<T> where T : class
     {
+        protected readonly ApplicationDbContext _context = context;
         public async Task<T?> AddAsync(T entity)
         {
-            await context.Set<T>().AddAsync(entity);
-            await context.SaveChangesAsync();
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
             return entity;
         }
 
         public async Task DeleteAsync(T entity)
         {
-            context.Set<T>().Remove(entity);
-            await context.SaveChangesAsync();
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
-            IReadOnlyList<T> result = await context.Set<T>().ToListAsync();
+            IReadOnlyList<T> result = await _context.Set<T>().ToListAsync();
             return result;
         }
 
         public async Task<T?> GetByIdAsync(int id)
         {
-            T? entity = await context.Set<T>().FindAsync(id);
+            T? entity = await _context.Set<T>().FindAsync(id);
             return entity;
         }
 
@@ -41,19 +42,19 @@ namespace JobTracker.Infrastructure.Repositories
 
         public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate)
         {
-            IReadOnlyList<T> result = await context.Set<T>().Where(predicate).ToListAsync();
+            IReadOnlyList<T> result = await _context.Set<T>().Where(predicate).ToListAsync();
             return result;
         }
 
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
         {
-            return await context.Set<T>().AnyAsync(predicate);
+            return await _context.Set<T>().AnyAsync(predicate);
         }
 
         public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
             // This generates "SELECT TOP 1 * ..." SQL query
-            return await context.Set<T>().FirstOrDefaultAsync(predicate);
+            return await _context.Set<T>().FirstOrDefaultAsync(predicate);
         }
     }
 }
