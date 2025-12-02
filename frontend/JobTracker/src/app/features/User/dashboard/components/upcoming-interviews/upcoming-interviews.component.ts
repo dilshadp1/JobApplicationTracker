@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
   selector: 'app-upcoming-interviews',
   imports: [CommonModule],
   templateUrl: './upcoming-interviews.component.html',
-  styleUrl: './upcoming-interviews.component.scss'
+  styleUrl: './upcoming-interviews.component.scss',
 })
 export class UpcomingInterviewsComponent {
   @Input() interviews: UpcomingInterview[] = [];

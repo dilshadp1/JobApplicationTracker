@@ -1,0 +1,75 @@
+<div class="table-container">
+  <h2>My Interviews</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Job Role</th>
+        <th>Round</th>
+        <th>Date & Time</th>
+        <th>Mode</th>
+        <th>Link</th>
+        <th>Status</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (intv of interviews; track intv.id) {
+      <tr>
+        <td class="fw-bold">
+          {{ intv.companyName }} <br />
+          <span
+            class="text-muted"
+            style="font-size: 0.8rem; font-weight: normal"
+            >{{ intv.jobPosition }}</span
+          >
+        </td>
+        <td>{{ intv.roundName }}</td>
+        <td>
+          <div style="font-weight: bold">
+            {{ intv.interviewDate | date : "MMM d, y" }}
+          </div>
+          <div style="font-size: 0.85rem; color: #666">
+            <i class="fa-regular fa-clock"></i>
+            {{ intv.interviewDate | date : "h:mm a" }}
+          </div>
+        </td>
+        <td>
+          <span class="badge" [class.online]="intv.mode === 'Online'">{{
+            intv.mode
+          }}</span>
+        </td>
+        <td>
+          @if (intv.locationUrl) {
+          <a [href]="intv.locationUrl" target="_blank" class="link-icon"
+            ><i class="fa-solid fa-video"></i> Join</a
+          >
+          } @else { - }
+        </td>
+        <td>{{ intv.status }}</td>
+        <td class="text-center">
+          <a
+            [routerLink]="['/user/interviews/edit', intv.id]"
+            class="icon-btn edit-btn"
+          >
+            <i class="fa-solid fa-pen-to-square"></i>
+          </a>
+          <button class="icon-btn delete-btn" (click)="onDelete(intv.id)">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="7" class="empty-state">
+          No interviews scheduled.
+          <a routerLink="/user/interviews/add">Add one?</a>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<a routerLink="/user/interviews/add" class="fab-btn" title="Add Interview">
+  <i class="fa-solid fa-calendar-plus"></i>
+</a>

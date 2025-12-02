@@ -10,3 +10,14 @@ export interface JobApplication {
   interviewCount?: number;
   offerStatus?: string;
 }
+
+export interface JobApplicationUpdate {
+  id?: number;
+  company: string;
+  position: string;
+  status: number;
+  appliedDate: string;
+  jobUrl: string | null;
+  salaryExpectation: number | null;
+  notes: string | null;
+}

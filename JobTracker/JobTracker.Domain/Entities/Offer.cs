@@ -26,5 +26,12 @@ namespace JobTracker.Domain.Entities
             Deadline = deadline;
             Benefits = benefits;
         }
+        public void Update(decimal salary, DateTime offerDate, DateTime deadline, string? benefits)
+        {
+            Salary = salary;
+            OfferDate = offerDate;
+            Deadline = deadline;
+            Benefits = benefits;
+        }
     }
 }

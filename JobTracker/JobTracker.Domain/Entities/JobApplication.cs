@@ -37,6 +37,18 @@ namespace JobTracker.Domain.Entities
             Notes = notes;
         }
 
+        public void UpdateJobApplication(string company, string position, ApplicationStatus status, DateTime appliedDate, string? jobUrl, decimal? salaryExpectation, string? notes)
+        {
+            Company = company;
+            Position = position;
+            Status = status;
+            AppliedDate = appliedDate;
+            JobUrl = jobUrl;
+            SalaryExpectation = salaryExpectation;
+            Notes = notes;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
         public DateTime UpdateStatus(ApplicationStatus status) { 
             Status = status;
             return UpdatedAt = DateTime.UtcNow;

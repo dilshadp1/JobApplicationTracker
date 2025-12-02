@@ -1,4 +1,5 @@
 ﻿using JobTracker.Application.DTO;
+using JobTracker.Application.Interfaces;
 using JobTracker.Application.Query.GetDashboardStatsQuery;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -13,6 +14,7 @@ namespace JobTracker.API.Controllers
     public class DashboardController : ControllerBase
     {
         private readonly IMediator _mediator;
+        
         public DashboardController(IMediator mediator)
         {
             _mediator = mediator;

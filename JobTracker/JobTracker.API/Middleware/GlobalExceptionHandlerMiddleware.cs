@@ -39,6 +39,12 @@ namespace JobTracker.API.Middleware
                 object response = new { unauthorizedEx.Message };
                 await context.Response.WriteAsJsonAsync(response);
             }
+            else if (ex is KeyNotFoundException keyNotFoundEx)
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                object response = new { keyNotFoundEx.Message };
+                await context.Response.WriteAsJsonAsync(response);
+            }
             else
             {
                 _logger.LogError(ex, ex.Message);

@@ -1,4 +1,5 @@
 ﻿using JobTracker.Domain.Enums;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace JobTracker.Domain.Entities
@@ -27,7 +28,15 @@ namespace JobTracker.Domain.Entities
             LocationUrl = locationUrl;
             
         }
-
+        public void Update(DateTime date, string roundName, InterviewMode mode, InterviewStatus status, string? locationUrl, string? feedback)
+        {
+            InterviewDate = date;
+            RoundName = roundName;
+            Mode = mode;
+            Status = status;
+            LocationUrl = locationUrl;
+            Feedback = feedback;
+        }
         public void UpdateStatus(InterviewStatus status)
         {
             Status = status;
