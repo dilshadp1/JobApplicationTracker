@@ -1,9 +1,9 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { DashboardService } from '../../../core/services/dashboard/dashboard-service.service';
-import { UpcomingInterviewsComponent } from './components/upcoming-interviews/upcoming-interviews.component';
 import { CommonModule } from '@angular/common';
+import { DashboardStats } from '../../models/dashboard-model';
+import { UpcomingInterviewsComponent } from './components/upcoming-interviews/upcoming-interviews.component';
 import { RecentActivityComponent } from './components/recent-activity/recent-activity.component';
-import { DashboardStats } from '../../models/models/dashboard-model';
 
 @Component({
   selector: 'app-dashboard',

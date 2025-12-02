@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { UpcomingInterview } from '../../../../models/models/upcoming-interview';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { UpcomingInterview } from '../../../../models/upcoming-interview';
 
 @Component({
   selector: 'app-upcoming-interviews',
