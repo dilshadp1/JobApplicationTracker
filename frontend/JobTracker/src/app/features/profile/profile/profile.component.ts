@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProfileService } from '../../../core/services/profile/profile.service';
 import { take } from 'rxjs';
-import { UserProfile } from '../../models/models/profile-model';
+import { UserProfile } from '../../models/profile-model';
 
 export interface ProfileForm {
   firstName: FormControl<string | null>;
