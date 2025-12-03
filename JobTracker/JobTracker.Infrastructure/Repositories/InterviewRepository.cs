@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JobTracker.Application.Interfaces;
 using JobTracker.Domain.Entities;
+using JobTracker.Domain.Enums;
 using JobTracker.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,8 @@ namespace JobTracker.Infrastructure.Repositories
                 .Include(i => i.JobApplication) 
                 .Where(i => i.JobApplication.UserId == userId
                             && i.InterviewDate >= now
-                            && i.InterviewDate <= nextWeek)
+                            && i.InterviewDate <= nextWeek
+                            && i.Status==InterviewStatus.Scheduled)
                 .OrderBy(i => i.InterviewDate)
                 .ToListAsync(); 
         }

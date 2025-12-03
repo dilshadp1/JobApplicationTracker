@@ -27,7 +27,7 @@ namespace JobTracker.Infrastructure.Repositories
 
         public async Task<Dictionary<ApplicationStatus, int>> GetJobStatsByUserIdAsync(int userId)
         {
-            List<JobStatDto>  stats = await _context.Set<JobApplication>()
+            List<JobStatDto>  stats = await _context.JobApplications
                 .Where(j => j.UserId == userId)
                 .GroupBy(j => j.Status)
                 .Select(g => new JobStatDto 

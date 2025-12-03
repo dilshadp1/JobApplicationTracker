@@ -6,7 +6,6 @@ import { roleGuard } from '../../core/auth/guards/role.guard';
 export const userRoutes: Routes = [
   {
     path: '',
-    // component: MainLayoutComponent,
     canActivate: [roleGuard],
     data:{roles:['User']},
     children: [
@@ -22,14 +21,6 @@ export const userRoutes: Routes = [
             (m) => m.DashboardComponent
           ),
         title: 'Dashboard',
-      },
-      {
-        path: 'profile',
-        loadComponent: () =>
-          import('../profile/profile/profile.component').then(
-            (m) => m.ProfileComponent
-          ),
-        title: 'My Profile',
       },
       {
         path: 'jobs',

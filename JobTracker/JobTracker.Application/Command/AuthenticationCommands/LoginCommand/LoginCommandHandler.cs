@@ -9,7 +9,7 @@ namespace JobTracker.Application.Command.AuthenticationCommands.LoginCommand
     {
         public async Task<AuthResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            User? user = (await userRepository.GetAsync(u => u.Email == request.Email)).FirstOrDefault();
+            User? user = (await userRepository.GetFirstOrDefaultAsync(u => u.Email == request.Email));
 
             if (user == null)
             {
