@@ -1,0 +1,65 @@
+<div class="table-container">
+  <div
+    class="header-flex"
+    style="display: flex; justify-content: space-between; align-items: center"
+  ></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Company</th>
+        <th>Position</th>
+        <th>Salary Offer</th>
+        <th>Deadline</th>
+        <th>Benefits</th>
+        <th class="text-center">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (offer of offers; track offer.id) {
+      <tr>
+        <td class="fw-bold">{{ offer.companyName }}</td>
+        <td>{{ offer.jobPosition }}</td>
+        <td style="color: #27ae60; font-weight: bold">
+          {{ offer.salary | currency : "USD" : "symbol" : "1.0-0" }}
+        </td>
+        <td>
+          <span [style.color]="offer.deadline < now ? 'red' : 'inherit'">
+            {{ offer.deadline | date : "mediumDate" }}
+          </span>
+        </td>
+        <td class="notes-cell" [title]="offer.benefits">
+          {{ offer.benefits || "-" }}
+        </td>
+        <td class="text-center">
+          <a
+            [routerLink]="['/user/offers/edit', offer.id]"
+            class="icon-btn edit-btn"
+          >
+            <i class="fa-solid fa-pen-to-square"></i>
+          </a>
+          <button class="icon-btn delete-btn" (click)="onDelete(offer.id)">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="6" class="empty-state">
+          No offers yet. Keep interviewing! 🚀
+          <br />
+          <a
+            routerLink="/user/offers/add"
+            style="font-size: 0.9rem; margin-top: 10px; display: inline-block"
+            >Record an Offer manually</a
+          >
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<a routerLink="/user/offers/add" class="fab-btn" title="Add Offer">
+  <i class="fa-solid fa-hand-holding-dollar"></i>
+</a>

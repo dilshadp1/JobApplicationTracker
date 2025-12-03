@@ -1,5 +1,6 @@
 ﻿using JobTracker.Application.Interfaces;
 using JobTracker.Domain.Entities;
+using JobTracker.Domain.Enums;
 using MediatR;
 
 namespace JobTracker.Application.Command.InterviewCommands.CreateInterview
@@ -8,11 +9,12 @@ namespace JobTracker.Application.Command.InterviewCommands.CreateInterview
     {
         public async Task<int> Handle(CreateInterviewCommand request, CancellationToken cancellationToken)
         {
-            bool isUserOwner = await jobRepository.IsJobOwnedByUserAsync(request.ApplicationId, request.UserId);
 
-            if (!isUserOwner)
+            JobApplication? job = await jobRepository.GetByIdAsync(request.ApplicationId);
+
+            if (job == null || job.UserId != request.UserId)
             {
-                throw new UnauthorizedAccessException("Not your Job Application to Add an Interview to");
+                throw new UnauthorizedAccessException("Not your Job Application.");
             }
 
             Interview newInterview = new Interview(
@@ -25,6 +27,13 @@ namespace JobTracker.Application.Command.InterviewCommands.CreateInterview
 
             newInterview.UpdateStatus(request.Status);
             await interviewRepository.AddAsync(newInterview);
+
+            if (job.Status == ApplicationStatus.Applied)
+            {
+                job.UpdateStatus(ApplicationStatus.Interviewing);
+                await jobRepository.UpdateAsync(job);
+            }
+
             return newInterview.Id;
         }
     }

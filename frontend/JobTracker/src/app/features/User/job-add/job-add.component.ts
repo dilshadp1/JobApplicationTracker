@@ -21,6 +21,9 @@ export class JobAddComponent implements OnInit {
   public isEditMode = false;
   public jobId: number | null = null;
 
+  public hasInterviews = false;
+  public hasOffer = false;
+
   jobForm = new FormGroup({
     company: new FormControl('', {
       nonNullable: true,
@@ -66,6 +69,16 @@ export class JobAddComponent implements OnInit {
 
   loadJobData(id: number) {
     this.jobApplicationService.getJob(id).subscribe((job) => {
+      if (
+        job.currentStatus === 'Rejected' ||
+        job.currentStatus === 'Declined'
+      ) {
+        this.jobForm.disable(); // DISABLE ENTIRE FORM
+        alert('This job application is closed and cannot be edited.');
+      }
+      this.hasInterviews = (job.interviewCount || 0) > 0;
+      this.hasOffer = job.offerStatus === 'Received';
+
       const formattedDate = new Date(job.appliedDate)
         .toISOString()
         .split('T')[0];
@@ -98,15 +111,39 @@ export class JobAddComponent implements OnInit {
     };
 
     if (this.isEditMode && this.jobId) {
-      this.jobApplicationService
-        .updateJob(this.jobId, requestData)
-        .subscribe(() => {
-          this.router.navigate(['/user/jobs']);
-        });
+      this.jobApplicationService.updateJob(this.jobId, requestData).subscribe({
+        next: () => {
+          this.handleRedirection(requestData.status, this.jobId!);
+        },
+        error: (err) => alert(err.error?.Message || 'Failed to update job'),
+      });
     } else {
-      this.jobApplicationService.addJob(requestData).subscribe(() => {
-        this.router.navigate(['/user/jobs']);
+      this.jobApplicationService.addJob(requestData).subscribe({
+        next: (newJobId) => {
+          this.handleRedirection(requestData.status, newJobId);
+        },
+        error: (err) => alert(err.error?.Message || 'Failed to add job'),
       });
     }
+  }
+
+  private handleRedirection(status: number, jobId: number) {
+    if (status === 1) {
+      if (confirm('Job added! Do you want to schedule the interview now?')) {
+        this.router.navigate(['/user/interviews/add'], {
+          queryParams: { jobId: jobId },
+        });
+        return;
+      }
+    }
+    if (status === 2) {
+      if (confirm('Job added! Do you want to record the offer details now?')) {
+        this.router.navigate(['/user/offers/add'], {
+          queryParams: { jobId: jobId },
+        });
+        return;
+      }
+    }
+    this.router.navigate(['/user/jobs']);
   }
 }

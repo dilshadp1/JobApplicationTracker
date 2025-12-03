@@ -11,5 +11,7 @@ namespace JobTracker.Application.Interfaces
         Task<bool> IsJobOwnedByUserAsync(int jobId, int userId);
         Task<JobApplication?> GetJobWithOfferAsync(int jobId);
         Task<List<JobApplication>> GetRecentApplicationsAsync(int userId, int count);
+
+        Task<bool> JobExistsAsync(int userId, string company, string position, DateTime appliedDate);
     }
 }

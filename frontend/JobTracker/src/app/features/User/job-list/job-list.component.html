@@ -45,7 +45,29 @@
           {{ application.notes }}
         </td>
         <td class="text-center">{{ application.interviewCount }}</td>
-        <td>{{ application.offerStatus }}</td>
+
+        <td class="text-center">
+          @if (application.offerStatus === 'Received') {
+          <span class="badge-success">
+            <i class="fa-solid fa-check"></i> Recorded
+          </span>
+          } @else if (application.currentStatus === 'OfferReceived' &&
+          application.offerStatus === 'Pending') {
+          <a
+            [routerLink]="['/user/offers/add']"
+            [queryParams]="{ jobId: application.id }"
+            class="btn-sm-action"
+            title="Add the offer details now"
+          >
+            <i class="fa-solid fa-plus"></i> Add Details
+          </a>
+          }@else if (application.currentStatus === 'Interviewing' &&
+          application.offerStatus === 'Pending') {
+          <span class="text-muted">Pending</span>
+          } @else {
+          <span class="text-muted">-</span>
+          }
+        </td>
 
         <td class="text-center">
           <a

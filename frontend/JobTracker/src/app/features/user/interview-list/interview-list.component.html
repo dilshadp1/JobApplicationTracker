@@ -1,5 +1,4 @@
 <div class="table-container">
-  <h2>My Interviews</h2>
   <table>
     <thead>
       <tr>
@@ -34,9 +33,13 @@
           </div>
         </td>
         <td>
-          <span class="badge" [class.online]="intv.mode === 'Online'">{{
-            intv.mode
-          }}</span>
+          <span
+            class="status-badge"
+            [class.online-mode]="intv.mode === 'Online'"
+            [class.offline-mode]="intv.mode === 'Offline'"
+          >
+            {{ intv.mode }}
+          </span>
         </td>
         <td>
           @if (intv.locationUrl) {

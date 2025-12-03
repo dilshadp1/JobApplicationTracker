@@ -2,23 +2,40 @@
   <div class="form-card">
     <div class="card-header">
       <h2>
-        <i class="fa-solid" [class.fa-briefcase]="!isEditMode" [class.fa-pen-to-square]="isEditMode"></i> 
-        {{ isEditMode ? 'Edit Application' : 'Add New Application' }}
+        <i
+          class="fa-solid"
+          [class.fa-briefcase]="!isEditMode"
+          [class.fa-pen-to-square]="isEditMode"
+        ></i>
+        {{ isEditMode ? "Edit Application" : "Add New Application" }}
       </h2>
-      
-      <p>{{ isEditMode ? 'Update the details below.' : 'Track a new opportunity in your journey.' }}</p>
+
+      <p>
+        {{
+          isEditMode
+            ? "Update the details below."
+            : "Track a new opportunity in your journey."
+        }}
+      </p>
     </div>
     <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
-      
       <div class="form-row">
         <div class="form-group">
           <label>Company Name <span class="required">*</span></label>
-          <input type="text" formControlName="company" placeholder="e.g. Google" />
+          <input
+            type="text"
+            formControlName="company"
+            placeholder="e.g. Google"
+          />
         </div>
 
         <div class="form-group">
           <label>Position <span class="required">*</span></label>
-          <input type="text" formControlName="position" placeholder="e.g. Frontend Dev" />
+          <input
+            type="text"
+            formControlName="position"
+            placeholder="e.g. Frontend Dev"
+          />
         </div>
       </div>
 
@@ -26,13 +43,26 @@
         <div class="form-group">
           <label>Current Status</label>
           <select formControlName="status">
-            <option [ngValue]="0">Applied</option>
-            <option [ngValue]="1">Interviewing</option>
+            <option [ngValue]="0" [disabled]="hasInterviews || hasOffer">
+              Applied {{ hasInterviews || hasOffer ? "(Locked)" : "" }}
+            </option>
+
+            <option [ngValue]="1" [disabled]="hasOffer">
+              Interviewing {{ hasOffer ? "(Locked)" : "" }}
+            </option>
+
             <option [ngValue]="2">Offer Received</option>
             <option [ngValue]="3">Hired</option>
             <option [ngValue]="4">Declined</option>
             <option [ngValue]="5">Rejected</option>
           </select>
+
+          @if(hasInterviews || hasOffer) {
+          <small class="text-muted" style="color: #e67e22">
+            <i class="fa-solid fa-lock"></i> Some statuses are locked because
+            interviews/offers exist.
+          </small>
+          }
         </div>
 
         <div class="form-group">
@@ -44,28 +74,39 @@
       <div class="form-row">
         <div class="form-group">
           <label>Expected Salary</label>
-          <input type="number" formControlName="salaryExpectation" placeholder="e.g. 80000" />
+          <input
+            type="number"
+            formControlName="salaryExpectation"
+            placeholder="e.g. 80000"
+          />
         </div>
 
         <div class="form-group">
           <label>Job Link</label>
-          <input type="text" formControlName="jobUrl" placeholder="https://..." />
+          <input
+            type="text"
+            formControlName="jobUrl"
+            placeholder="https://..."
+          />
         </div>
       </div>
 
       <div class="form-group full-width">
         <label>Notes</label>
-        <textarea formControlName="notes" rows="4" placeholder="Referral name, tech stack, or specific thoughts..."></textarea>
+        <textarea
+          formControlName="notes"
+          rows="4"
+          placeholder="Referral name, tech stack, or specific thoughts..."
+        ></textarea>
       </div>
 
       <div class="form-actions">
         <a routerLink="/user/jobs" class="btn-cancel">Cancel</a>
-        
+
         <button type="submit" class="btn-save" [disabled]="!jobForm.valid">
           <i class="fa-solid fa-check"></i> Save Application
         </button>
       </div>
-
     </form>
   </div>
 </div>
