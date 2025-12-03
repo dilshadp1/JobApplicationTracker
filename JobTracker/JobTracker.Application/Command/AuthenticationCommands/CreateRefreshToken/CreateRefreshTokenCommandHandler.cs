@@ -25,7 +25,7 @@ namespace JobTracker.Application.Command.AuthenticationCommands.CreateRefreshTok
             User? user = await userRepository.GetByIdAsync(storedToken.UserId);
 
             if (user == null)
-                throw new UnauthorizedAccessException("User not found.");
+                throw new KeyNotFoundException("User not found.");
 
             string newAccessToken = tokenGenerator.GenerateToken(user);
             string newRefreshTokenRaw = tokenGenerator.GenerateRefreshToken();
@@ -36,7 +36,7 @@ namespace JobTracker.Application.Command.AuthenticationCommands.CreateRefreshTok
                     storedToken.Revoke(newRefreshTokenHash);
                     await refreshRepo.UpdateAsync(storedToken);
 
-                    var newEntity = new RefreshToken(newRefreshTokenRaw, user.Id);//refreshtoken
+                    RefreshToken? newEntity = new RefreshToken(newRefreshTokenRaw, user.Id);
                     await refreshRepo.AddAsync(newEntity);
 
                     scope.Complete();

@@ -27,7 +27,7 @@ namespace JobTracker.Application.Query.GetProfileQuery
 
             if (user == null)
             {
-                throw new Exception("User not found.");
+                throw new KeyNotFoundException("User not found.");
             }
 
             return new ProfileDto
