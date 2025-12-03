@@ -9,6 +9,8 @@ namespace JobTracker.Application.DTO
     public class DashboardStatsDto
     {
         public int TotalApplications { get; set; }
+        public int Applied { get; set; }
+
         public int Interviewing { get; set; }
         public int Offers { get; set; }
         public int Rejected { get; set; }

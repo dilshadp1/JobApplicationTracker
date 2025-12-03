@@ -1,6 +1,7 @@
 ﻿
 using JobTracker.Application.Command.AuthenticationCommands.CreateRefreshToken;
 using JobTracker.Application.Command.AuthenticationCommands.LoginCommand;
+using JobTracker.Application.Command.AuthenticationCommands.LogoutCommand;
 using JobTracker.Application.Command.UserCommands.CreateUser;
 using JobTracker.Application.DTO;
 using MediatR;
@@ -43,6 +44,30 @@ namespace JobTracker.API.Controllers
             SetRefreshTokenCookie(response.RefreshToken);
             return Ok(response);
 
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            string? refreshToken = Request.Cookies["refreshToken"];
+
+            if (!string.IsNullOrEmpty(refreshToken))
+            {
+                LogoutCommand command = new LogoutCommand { Token = refreshToken };
+                await _mediator.Send(command);
+            }
+
+            CookieOptions cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(-1) 
+            };
+
+            Response.Cookies.Append("refreshToken", "", cookieOptions);
+
+            return Ok(new { Message = "Logged out successfully" });
         }
 
         private void SetRefreshTokenCookie(string refreshToken)
