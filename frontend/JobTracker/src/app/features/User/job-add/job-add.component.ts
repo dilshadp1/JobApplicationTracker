@@ -73,9 +73,7 @@ export class JobAddComponent implements OnInit {
 
       const isClosed =
         job.currentStatus === 'Rejected' || job.currentStatus === 'Declined';
-      const formattedDate = new Date(job.appliedDate)
-        .toISOString()
-        .split('T')[0];
+      const formattedDate = job.appliedDate.toString().split('T')[0];
       const statusEnum = this.mapStatusToEnum(job.currentStatus);
 
       this.jobForm.patchValue({

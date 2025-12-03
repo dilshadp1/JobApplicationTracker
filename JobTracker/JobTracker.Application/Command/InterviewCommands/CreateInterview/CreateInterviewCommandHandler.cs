@@ -24,6 +24,11 @@ namespace JobTracker.Application.Command.InterviewCommands.CreateInterview
                 throw new InvalidOperationException($"Cannot schedule interviews for a '{job.Status}' application.");
             }
 
+            if (request.InterviewDate.Date < job.AppliedDate.Date)
+            {
+                throw new InvalidOperationException($"Interview date ({request.InterviewDate.ToShortDateString()}) cannot be earlier than the application date ({job.AppliedDate.ToShortDateString()}).");
+            }
+
             string cleanRoundName = request.RoundName.Trim();
             bool roundExists = await interviewRepository.HasActiveInterviewForRoundAsync(request.ApplicationId, cleanRoundName);
             if (roundExists) throw new InvalidOperationException($"An active interview for '{cleanRoundName}' already exists.");

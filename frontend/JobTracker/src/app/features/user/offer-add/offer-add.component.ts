@@ -11,7 +11,6 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { OfferService } from '../../../core/services/offer/offer.service';
 import { JobApplicationService } from '../../../core/services/job-application/job-application.service';
-import { JobApplication } from '../../models/job-application';
 import { OfferUpdate } from '../../models/offer';
 
 @Component({
@@ -26,16 +25,7 @@ export class OfferAddComponent implements OnInit {
   selectedJobDisplay: string = 'Loading...';
 
   today: string = new Date().toISOString().split('T')[0];
-
-  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
-    const start = control.get('offerDate')?.value;
-    const end = control.get('deadline')?.value;
-
-    if (start && end && new Date(end) < new Date(start)) {
-      return { invalidDateRange: true }; // Error found
-    }
-    return null; // No error
-  }
+  minDate: string = '';
 
   offerForm = new FormGroup(
     {
@@ -68,33 +58,50 @@ export class OfferAddComponent implements OnInit {
       this.loadOffer(this.offerId);
     } else if (queryJobId) {
       this.offerForm.patchValue({ applicationId: +queryJobId });
-      this.jobService.getJob(+queryJobId).subscribe({
-        next: (job) => {
-          this.selectedJobDisplay = `${job.company} - ${job.position}`;
-        },
-        error: () => {
-          alert('Invalid Job ID');
-          this.router.navigate(['/user/jobs']);
-        },
-      });
+      this.fetchJobDetails(+queryJobId);
     } else {
       alert('Please select a job from your Job List to add an offer.');
       this.router.navigate(['/user/jobs']);
     }
   }
 
+  fetchJobDetails(jobId: number) {
+    this.jobService.getJob(jobId).subscribe({
+      next: (job) => {
+        this.selectedJobDisplay = `${job.company} - ${job.position}`;
+        this.minDate = new Date(job.appliedDate).toISOString().split('T')[0];
+      },
+      error: () => {
+        this.selectedJobDisplay = 'Job not found';
+      },
+    });
+  }
+
   loadOffer(id: number) {
     this.offerService.getOffer(id).subscribe((offer) => {
-      this.selectedJobDisplay = `${offer.companyName} - ${offer.jobPosition}`;
+      const safeOfferDate = offer.offerDate.toString().split('T')[0];
+      const safeDeadline = offer.deadline.toString().split('T')[0];
+
       this.offerForm.patchValue({
         applicationId: offer.applicationId,
         salary: offer.salary,
-        offerDate: new Date(offer.offerDate).toISOString().split('T')[0],
-        deadline: new Date(offer.deadline).toISOString().split('T')[0],
+        offerDate: safeOfferDate,
+        deadline: safeDeadline,
         benefits: offer.benefits,
       });
-      // this.offerForm.controls.applicationId.disable();
+
+      this.fetchJobDetails(offer.applicationId);
     });
+  }
+
+  dateRangeValidator(control: AbstractControl): ValidationErrors | null {
+    const start = control.get('offerDate')?.value;
+    const end = control.get('deadline')?.value;
+
+    if (start && end && new Date(end) < new Date(start)) {
+      return { invalidDateRange: true };
+    }
+    return null;
   }
 
   onSubmit() {
@@ -111,13 +118,27 @@ export class OfferAddComponent implements OnInit {
     };
 
     if (this.isEditMode && this.offerId) {
-      this.offerService.updateOffer(this.offerId, reqData).subscribe(() => {
-        this.router.navigate(['/user/offers']);
+      this.offerService.updateOffer(this.offerId, reqData).subscribe({
+        next: () => this.router.navigate(['/user/offers']),
+        error: (err) => alert(err.error?.Message || 'Failed to update offer'),
       });
     } else {
       this.offerService.addOffer(reqData).subscribe({
         next: () => this.router.navigate(['/user/offers']),
         error: (err) => alert(err.error?.Message || 'Failed to add offer'),
+      });
+    }
+  }
+
+  onDelete() {
+    if (
+      this.offerId &&
+      confirm(
+        'Are you sure? Deleting this offer will revert the Job Status if no other offers exist.'
+      )
+    ) {
+      this.offerService.deleteOffer(this.offerId).subscribe(() => {
+        this.router.navigate(['/user/offers']);
       });
     }
   }
