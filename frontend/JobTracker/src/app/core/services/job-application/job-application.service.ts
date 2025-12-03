@@ -13,14 +13,18 @@ export class JobApplicationService {
   private apiUrl = 'https://localhost:7126/api/jobapplications';
   constructor(private http: HttpClient) {}
 
-  getApplications(): Observable<JobApplication[]> {
-    return this.http.get<JobApplication[]>(this.apiUrl);
+  getApplications(status?: string): Observable<JobApplication[]> {
+    let params = {};
+    if (status && status !== 'All') {
+      params = { status: status };
+    }
+    return this.http.get<JobApplication[]>(this.apiUrl, { params });
   }
 
   getJob(id: number): Observable<JobApplication> {
     return this.http.get<JobApplication>(`${this.apiUrl}/${id}`);
   }
-  
+
   addJob(formData: JobApplicationUpdate): Observable<number> {
     return this.http.post<number>(this.apiUrl, formData);
   }

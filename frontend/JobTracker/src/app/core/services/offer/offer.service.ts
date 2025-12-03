@@ -9,8 +9,16 @@ export class OfferService {
 
   constructor(private http: HttpClient) {}
 
-  getOffers(): Observable<Offer[]> {
-    return this.http.get<Offer[]>(this.apiUrl);
+  getOffers(
+    filter: string = 'All',
+    sort: string = 'Default'
+  ): Observable<Offer[]> {
+    let params: any = {};
+
+    if (filter !== 'All') params.filter = filter;
+    if (sort !== 'Default') params.sort = sort;
+
+    return this.http.get<Offer[]>(this.apiUrl, { params });
   }
 
   getOffer(id: number): Observable<Offer> {

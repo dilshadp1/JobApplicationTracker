@@ -14,7 +14,7 @@ namespace JobTracker.Application.Query.JobApplicationsQuery.GetJobApplications
         {
             public async Task<List<JobApplicationDto>> Handle(GetJobApplicationsQuery query, CancellationToken cancellationToken)
             {
-                List<JobApplication> jobs = await jobApplicationRepository.GetJobApplicationsWithDetailsAsync(query.UserId);
+                List<JobApplication> jobs = await jobApplicationRepository.GetJobApplicationsWithDetailsAsync(query.UserId, query.Status);
 
                 return jobs.Select(j => new JobApplicationDto
                 {

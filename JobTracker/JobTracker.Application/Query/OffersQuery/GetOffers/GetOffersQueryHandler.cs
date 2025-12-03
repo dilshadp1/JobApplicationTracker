@@ -15,7 +15,7 @@ namespace JobTracker.Application.Query.OffersQuery.GetOffers
     {
         public async Task<List<OfferDto>> Handle(GetOffersQuery query, CancellationToken cancellationToken)
         {
-            List<Offer> offers = await offerRepository.GetAllOffersByUserIdAsync(query.UserId);
+            List<Offer> offers = await offerRepository.GetAllOffersByUserIdAsync(query.UserId,query.Filter,query.Sort);
 
             return offers.Select(o => new OfferDto
             {

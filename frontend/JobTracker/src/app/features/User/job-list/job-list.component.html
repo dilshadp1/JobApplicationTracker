@@ -1,4 +1,30 @@
 <div class="table-container">
+  <div
+    class="header-flex"
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    "
+  >
+    <div class="filter-box">
+      <select
+        [ngModel]="filterStatus()"
+        (ngModelChange)="filterStatus.set($any($event))"
+        class="form-select"
+      >
+        <option value="All">All Statuses</option>
+        <option value="Applied">Applied</option>
+        <option value="Interviewing">Interviewing</option>
+        <option value="OfferReceived">Offer Received</option>
+        <option value="Hired">Hired</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Declined">Declined</option>
+      </select>
+    </div>
+  </div>
+
   <table>
     <thead>
       <tr>
@@ -15,7 +41,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (application of applications; track application.id) {
+      @for (application of applications(); track application.id) {
       <tr>
         <td class="fw-bold">{{ application.company }}</td>
         <td>{{ application.position }}</td>
@@ -61,9 +87,6 @@
           >
             <i class="fa-solid fa-plus"></i> Add Details
           </a>
-          }@else if (application.currentStatus === 'Interviewing' &&
-          application.offerStatus === 'Pending') {
-          <span class="text-muted">Pending</span>
           } @else {
           <span class="text-muted">-</span>
           }
@@ -73,15 +96,12 @@
           <a
             [routerLink]="['/user/jobs/edit', application.id]"
             class="icon-btn edit-btn"
-            title="Edit Application"
           >
             <i class="fa-solid fa-pen-to-square"></i>
           </a>
-
           <button
             class="icon-btn delete-btn"
             (click)="onDelete(application.id)"
-            title="Delete Application"
           >
             <i class="fa-solid fa-trash"></i>
           </button>
@@ -91,7 +111,7 @@
       <tr>
         <td colspan="10" class="empty-state">
           No applications found.
-          <a routerLink="/user/jobs/add">Add your first job!</a>
+          <a routerLink="/user/jobs/add">Add one!</a>
         </td>
       </tr>
       }

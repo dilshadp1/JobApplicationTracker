@@ -5,7 +5,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { JobApplicationService } from '../../../core/services/job-application/job-application.service';
 import { JobApplicationUpdate } from '../../models/job-application';
@@ -69,20 +68,14 @@ export class JobAddComponent implements OnInit {
 
   loadJobData(id: number) {
     this.jobApplicationService.getJob(id).subscribe((job) => {
-      if (
-        job.currentStatus === 'Rejected' ||
-        job.currentStatus === 'Declined'
-      ) {
-        this.jobForm.disable(); // DISABLE ENTIRE FORM
-        alert('This job application is closed and cannot be edited.');
-      }
       this.hasInterviews = (job.interviewCount || 0) > 0;
       this.hasOffer = job.offerStatus === 'Received';
 
+      const isClosed =
+        job.currentStatus === 'Rejected' || job.currentStatus === 'Declined';
       const formattedDate = new Date(job.appliedDate)
         .toISOString()
         .split('T')[0];
-
       const statusEnum = this.mapStatusToEnum(job.currentStatus);
 
       this.jobForm.patchValue({
@@ -94,56 +87,70 @@ export class JobAddComponent implements OnInit {
         status: statusEnum,
         appliedDate: formattedDate,
       });
+
+      if (isClosed) {
+        this.jobForm.controls.status.disable();
+      }
     });
   }
 
   public onSubmit() {
     if (this.jobForm.invalid) return;
 
+    const formValue = this.jobForm.getRawValue();
+
     const requestData: JobApplicationUpdate = {
-      company: this.jobForm.controls.company.value,
-      position: this.jobForm.controls.position.value,
-      jobUrl: this.jobForm.controls.jobUrl.value || null,
-      salaryExpectation: this.jobForm.controls.salaryExpectation.value,
-      notes: this.jobForm.controls.notes.value || null,
-      appliedDate: this.jobForm.controls.appliedDate.value,
-      status: this.jobForm.controls.status.value,
+      company: formValue.company,
+      position: formValue.position,
+      jobUrl: formValue.jobUrl || null,
+      salaryExpectation: formValue.salaryExpectation,
+      notes: formValue.notes || null,
+      appliedDate: formValue.appliedDate,
+      status: formValue.status,
     };
 
     if (this.isEditMode && this.jobId) {
       this.jobApplicationService.updateJob(this.jobId, requestData).subscribe({
         next: () => {
-          this.handleRedirection(requestData.status, this.jobId!);
+          this.handleRedirection(requestData.status, this.jobId!, true);
         },
         error: (err) => alert(err.error?.Message || 'Failed to update job'),
       });
     } else {
       this.jobApplicationService.addJob(requestData).subscribe({
         next: (newJobId) => {
-          this.handleRedirection(requestData.status, newJobId);
+          this.handleRedirection(requestData.status, newJobId, false);
         },
         error: (err) => alert(err.error?.Message || 'Failed to add job'),
       });
     }
   }
 
-  private handleRedirection(status: number, jobId: number) {
-    if (status === 1) {
-      if (confirm('Job added! Do you want to schedule the interview now?')) {
+  private handleRedirection(status: number, jobId: number, isUpdate: boolean) {
+    const msgPrefix = isUpdate ? 'Job updated!' : 'Job added!';
+
+    // Logic: Only ask if status is Interviewing AND no interviews exist yet
+    if (status === 1 && !this.hasInterviews) {
+      if (confirm(`${msgPrefix} Do you want to schedule the interview now?`)) {
         this.router.navigate(['/user/interviews/add'], {
           queryParams: { jobId: jobId },
         });
         return;
       }
     }
-    if (status === 2) {
-      if (confirm('Job added! Do you want to record the offer details now?')) {
+
+    // Logic: Only ask if status is Offer Received AND no offer exists yet
+    if (status === 2 && !this.hasOffer) {
+      if (
+        confirm(`${msgPrefix} Do you want to record the offer details now?`)
+      ) {
         this.router.navigate(['/user/offers/add'], {
           queryParams: { jobId: jobId },
         });
         return;
       }
     }
+
     this.router.navigate(['/user/jobs']);
   }
 }

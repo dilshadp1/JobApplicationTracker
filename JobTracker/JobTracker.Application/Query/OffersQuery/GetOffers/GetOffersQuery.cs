@@ -11,5 +11,7 @@ namespace JobTracker.Application.Query.OffersQuery.GetOffers
     public class GetOffersQuery : IRequest<List<OfferDto>>
     {
         public int UserId { get; set; }
+        public string? Filter { get; set; } 
+        public string? Sort { get; set; }
     }
 }

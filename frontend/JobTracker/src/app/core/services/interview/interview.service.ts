@@ -9,8 +9,12 @@ export class InterviewService {
 
   constructor(private http: HttpClient) {}
 
-  getInterviews(): Observable<Interview[]> {
-    return this.http.get<Interview[]>(this.apiUrl);
+  getInterviews(status?: string): Observable<Interview[]> {
+    let params = {};
+    if (status && status !== 'All') {
+      params = { status: status };
+    }
+    return this.http.get<Interview[]>(this.apiUrl, { params });
   }
 
   getInterview(id: number): Observable<Interview> {

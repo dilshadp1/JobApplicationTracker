@@ -23,7 +23,7 @@ import { OfferUpdate } from '../../models/offer';
 export class OfferAddComponent implements OnInit {
   isEditMode = false;
   offerId: number | null = null;
-  userJobs: JobApplication[] = [];
+  selectedJobDisplay: string = 'Loading...';
 
   today: string = new Date().toISOString().split('T')[0];
 
@@ -59,25 +59,33 @@ export class OfferAddComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.jobService.getApplications().subscribe((jobs) => {
-      this.userJobs = jobs;
-    });
-
     const id = this.route.snapshot.paramMap.get('id');
+    const queryJobId = this.route.snapshot.queryParamMap.get('jobId');
+
     if (id) {
       this.isEditMode = true;
       this.offerId = +id;
       this.loadOffer(this.offerId);
+    } else if (queryJobId) {
+      this.offerForm.patchValue({ applicationId: +queryJobId });
+      this.jobService.getJob(+queryJobId).subscribe({
+        next: (job) => {
+          this.selectedJobDisplay = `${job.company} - ${job.position}`;
+        },
+        error: () => {
+          alert('Invalid Job ID');
+          this.router.navigate(['/user/jobs']);
+        },
+      });
     } else {
-      const preSelectJobId = this.route.snapshot.queryParamMap.get('jobId');
-      if (preSelectJobId) {
-        this.offerForm.patchValue({ applicationId: +preSelectJobId });
-      }
+      alert('Please select a job from your Job List to add an offer.');
+      this.router.navigate(['/user/jobs']);
     }
   }
 
   loadOffer(id: number) {
     this.offerService.getOffer(id).subscribe((offer) => {
+      this.selectedJobDisplay = `${offer.companyName} - ${offer.jobPosition}`;
       this.offerForm.patchValue({
         applicationId: offer.applicationId,
         salary: offer.salary,
@@ -85,7 +93,7 @@ export class OfferAddComponent implements OnInit {
         deadline: new Date(offer.deadline).toISOString().split('T')[0],
         benefits: offer.benefits,
       });
-      this.offerForm.controls.applicationId.disable();
+      // this.offerForm.controls.applicationId.disable();
     });
   }
 

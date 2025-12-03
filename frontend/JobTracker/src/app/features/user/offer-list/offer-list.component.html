@@ -1,8 +1,39 @@
 <div class="table-container">
   <div
     class="header-flex"
-    style="display: flex; justify-content: space-between; align-items: center"
-  ></div>
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    "
+  >
+    <h2 style="margin: 0; border: none">My Offers</h2>
+
+    <div style="display: flex; gap: 10px">
+      <select
+        [ngModel]="filterType()"
+        (ngModelChange)="filterType.set($any($event))"
+        class="form-select"
+      >
+        <option value="All">All Offers</option>
+        <option value="Active">Active Only</option>
+        <option value="Expired">Expired Only</option>
+      </select>
+
+      <select
+        [ngModel]="sortType()"
+        (ngModelChange)="sortType.set($any($event))"
+        class="form-select"
+      >
+        <option value="Default">Sort: Deadline</option>
+        <option value="SalaryHigh">Salary: High to Low</option>
+        <option value="SalaryLow">Salary: Low to High</option>
+      </select>
+    </div>
+  </div>
 
   <table>
     <thead>
@@ -12,11 +43,11 @@
         <th>Salary Offer</th>
         <th>Deadline</th>
         <th>Benefits</th>
-        <th class="text-center">Actions</th>
+        <th class="text-center">View / Edit</th>
       </tr>
     </thead>
     <tbody>
-      @for (offer of offers; track offer.id) {
+      @for (offer of offers(); track offer.id) {
       <tr>
         <td class="fw-bold">{{ offer.companyName }}</td>
         <td>{{ offer.jobPosition }}</td>
@@ -35,31 +66,24 @@
           <a
             [routerLink]="['/user/offers/edit', offer.id]"
             class="icon-btn edit-btn"
+            title="View Details"
           >
-            <i class="fa-solid fa-pen-to-square"></i>
+            <i class="fa-solid fa-eye"></i>
           </a>
-          <button class="icon-btn delete-btn" (click)="onDelete(offer.id)">
-            <i class="fa-solid fa-trash"></i>
-          </button>
         </td>
       </tr>
       } @empty {
       <tr>
         <td colspan="6" class="empty-state">
-          No offers yet. Keep interviewing! 🚀
+          No offers yet.
           <br />
-          <a
-            routerLink="/user/offers/add"
-            style="font-size: 0.9rem; margin-top: 10px; display: inline-block"
-            >Record an Offer manually</a
-          >
+          <span class="text-muted" style="font-size: 0.9rem">
+            Update a Job Application status to
+            <strong>"Offer Received"</strong> to add one!
+          </span>
         </td>
       </tr>
       }
     </tbody>
   </table>
 </div>
-
-<a routerLink="/user/offers/add" class="fab-btn" title="Add Offer">
-  <i class="fa-solid fa-hand-holding-dollar"></i>
-</a>

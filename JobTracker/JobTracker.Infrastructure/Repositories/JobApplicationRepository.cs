@@ -9,12 +9,21 @@ namespace JobTracker.Infrastructure.Repositories
 {
     public class JobApplicationRepository(ApplicationDbContext context) : GenericRepository<JobApplication>(context), IJobApplicationRepository
     {
-        public async Task<List<JobApplication>> GetJobApplicationsWithDetailsAsync(int userId)
+        public async Task<List<JobApplication>> GetJobApplicationsWithDetailsAsync(int userId, ApplicationStatus? filterStatus)
         {
-            return await _context.JobApplications.Where(j => j.UserId == userId)
-                .Include(o => o.Offer)
-                .Include(i => i.Interviews)
-                .ToListAsync();
+            IQueryable<JobApplication> query = context.JobApplications
+            .Include(o => o.Offer)
+            .Include(i => i.Interviews)
+            .Where(j => j.UserId == userId);
+
+            if (filterStatus.HasValue)
+            {
+                query = query.Where(j => j.Status == filterStatus.Value);
+            }
+
+            query = query.OrderByDescending(j => j.AppliedDate);
+
+            return await query.ToListAsync();
         }
 
         public async Task<JobApplication?> GetJobApplicationByIdWithDetailsAsync(int jobId, int userId)

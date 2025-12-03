@@ -54,9 +54,14 @@ namespace JobTracker.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<OfferDto>>> GetAll()
+        public async Task<ActionResult<List<OfferDto>>> GetAll([FromQuery] string? filter, [FromQuery] string? sort)
         {
-            GetOffersQuery query = new GetOffersQuery { UserId = _currentUserService.UserId };
+            GetOffersQuery query = new GetOffersQuery
+            {
+                UserId = _currentUserService.UserId,
+                Filter = filter,
+                Sort = sort
+            };
             return Ok(await _mediator.Send(query));
         }
 

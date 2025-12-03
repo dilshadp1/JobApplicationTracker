@@ -1,5 +1,6 @@
 ﻿using JobTracker.Application.Interfaces;
 using JobTracker.Domain.Entities;
+using JobTracker.Domain.Enums;
 using MediatR;
 
 namespace JobTracker.Application.Command.JobApplicationCommands.CreateJobApplication
@@ -31,7 +32,14 @@ namespace JobTracker.Application.Command.JobApplicationCommands.CreateJobApplica
                 request.Notes
                 );
 
-            newJobApplication.UpdateStatus(request.Status);
+            if (request.Status == ApplicationStatus.Interviewing || request.Status == ApplicationStatus.OfferReceived)
+            {
+                newJobApplication.UpdateStatus(ApplicationStatus.Applied);
+            }
+            else
+            {
+                newJobApplication.UpdateStatus(request.Status);
+            }
 
             await jobApplicationRepository.AddAsync(newJobApplication);
 

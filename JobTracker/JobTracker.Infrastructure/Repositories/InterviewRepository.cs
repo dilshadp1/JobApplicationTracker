@@ -28,20 +28,42 @@ namespace JobTracker.Infrastructure.Repositories
                 .ToListAsync(); 
         }
 
-        public async Task<List<Interview>> GetAllInterviewsByUserIdAsync(int userId)
+        public async Task<List<Interview>> GetAllInterviewsByUserIdAsync(int userId, InterviewStatus? filterStatus)
         {
-            return await context.Interviews
-                .Include(i => i.JobApplication) // Include this so we can show Company Name
-                .Where(i => i.JobApplication.UserId == userId)
-                .OrderByDescending(i => i.InterviewDate) // Show newest first
-                .ToListAsync();
+            var query = context.Interviews
+                .Include(i => i.JobApplication)
+                .Where(i => i.JobApplication.UserId == userId);
+
+            if (filterStatus.HasValue)
+            {
+                query = query.Where(i => i.Status == filterStatus.Value);
+            }
+
+            var now = DateTime.UtcNow;
+
+            query = query
+                .OrderBy(i => i.InterviewDate < now)
+                .ThenBy(i => i.InterviewDate);
+
+            return await query.ToListAsync();
         }
 
         public async Task<Interview?> GetInterviewByIdWithJobAsync(int id)
         {
             return await context.Interviews
-                .Include(i => i.JobApplication) // This performs the JOIN
+                .Include(i => i.JobApplication) 
                 .FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<bool> HasActiveInterviewForRoundAsync(int applicationId, string roundName)
+        {
+
+            string normalizedName = roundName.Trim().ToLower();
+
+            return await context.Interviews
+                .AnyAsync(i => i.ApplicationId == applicationId
+                            && i.RoundName.ToLower() == normalizedName
+                            && i.Status != InterviewStatus.Cancelled);
         }
     }
 }
