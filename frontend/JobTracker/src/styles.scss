@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+.form-select {
+  padding: 8px 12px;
+  border: 1px solid #dce4ec;
+  border-radius: 6px;
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  min-width: 120px;
+
+  &:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+  }
+}

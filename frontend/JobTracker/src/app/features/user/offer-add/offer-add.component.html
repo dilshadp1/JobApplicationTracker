@@ -13,18 +13,19 @@
 
     <form [formGroup]="offerForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label>Job Application <span class="required">*</span></label>
-        <select formControlName="applicationId">
-          <option [ngValue]="null" disabled>Select the job...</option>
-          @for(job of userJobs; track job.id) {
-          <option [ngValue]="job.id">
-            {{ job.company }} - {{ job.position }}
-          </option>
-          }
-        </select>
-        @if(isEditMode) {
-        <small class="text-muted">Job cannot be changed while editing.</small>
-        }
+        <label>Job Application</label>
+        <input
+          type="text"
+          [value]="selectedJobDisplay"
+          readonly
+          style="
+            background-color: #e9ecef;
+            cursor: not-allowed;
+            color: #555;
+            font-weight: bold;
+          "
+        />
+        <input type="hidden" formControlName="applicationId" />
       </div>
 
       <div class="form-group">

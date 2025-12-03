@@ -15,7 +15,7 @@ namespace JobTracker.Application.Query.InterviewsQuery.GetInterviews
     {
         public async Task<List<InterviewDto>> Handle(GetInterviewsQuery query, CancellationToken cancellationToken)
         {
-            List<Interview> interviews = await interviewRepository.GetAllInterviewsByUserIdAsync(query.UserId);
+            List<Interview> interviews = await interviewRepository.GetAllInterviewsByUserIdAsync(query.UserId, query.Status);
 
             return interviews.Select(interview => new InterviewDto
             {

@@ -12,30 +12,35 @@ namespace JobTracker.Application.Command.JobApplicationCommands.UpdateJobApplica
         {
             JobApplication? job = await jobRepository.GetJobApplicationByIdWithDetailsAsync(command.Id, command.UserId);
 
-            if (job == null)
+            if (job == null) throw new UnauthorizedAccessException("Not your Job Application to Edit");
+
+
+            bool isDead = job.Status == ApplicationStatus.Rejected || job.Status == ApplicationStatus.Declined;
+            if (isDead && job.Status != command.Status)
             {
-                throw new UnauthorizedAccessException("Not your Job Application to Edit");
+                throw new InvalidOperationException($"This application is closed ({job.Status}). You cannot change the status, but you can update notes/details.");
             }
 
-            if (command.Status == ApplicationStatus.Applied && job.Interviews.Count > 0)
+            ApplicationStatus finalStatus = command.Status;
+
+            if (command.Status == ApplicationStatus.Interviewing && job.Interviews.Count == 0)
             {
-                throw new InvalidOperationException("Cannot revert to 'Applied' because interviews have already been scheduled.");
+                finalStatus = ApplicationStatus.Applied;
             }
 
-            if (command.Status < ApplicationStatus.OfferReceived && job.Offer != null)
-            {
-                throw new InvalidOperationException("Cannot revert status. An offer has already been recorded for this application.");
-            }
 
-            if (job.Status == ApplicationStatus.Rejected || job.Status == ApplicationStatus.Declined)
+            if (command.Status == ApplicationStatus.OfferReceived && job.Offer == null)
             {
-                throw new InvalidOperationException("This application is closed (Rejected/Declined) and cannot be modified.");
+
+                finalStatus = job.Interviews.Count > 0
+                    ? ApplicationStatus.Interviewing
+                    : ApplicationStatus.Applied;
             }
 
             job.UpdateJobApplication(
                 command.Company,
                 command.Position,
-                command.Status,
+                finalStatus, 
                 command.AppliedDate,
                 command.JobUrl,
                 command.SalaryExpectation,

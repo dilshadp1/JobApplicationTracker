@@ -54,7 +54,10 @@ export class InterviewAddComponent implements OnInit {
 
   ngOnInit(): void {
     this.jobService.getApplications().subscribe((jobs) => {
-      this.userJobs = jobs;
+      this.userJobs = jobs.filter(
+        (j) =>
+          j.currentStatus === 'Applied' || j.currentStatus === 'Interviewing'
+      );
     });
 
     const id = this.route.snapshot.paramMap.get('id');
@@ -62,6 +65,11 @@ export class InterviewAddComponent implements OnInit {
       this.isEditMode = true;
       this.interviewId = +id;
       this.loadInterview(this.interviewId);
+    } else {
+      const preSelectJobId = this.route.snapshot.queryParamMap.get('jobId');
+      if (preSelectJobId) {
+        this.interviewForm.patchValue({ applicationId: +preSelectJobId });
+      }
     }
   }
 
@@ -102,7 +110,7 @@ export class InterviewAddComponent implements OnInit {
     const reqData: InterviewUpdate = {
       applicationId: rawData.applicationId!,
       interviewDate: rawData.interviewDate!,
-      roundName: rawData.roundName!,
+      roundName: rawData.roundName!.trim(),
       mode: rawData.mode,
       status: rawData.status,
       locationUrl: rawData.locationUrl || null,
@@ -112,11 +120,24 @@ export class InterviewAddComponent implements OnInit {
     if (this.isEditMode && this.interviewId) {
       this.interviewService
         .updateInterview(this.interviewId, reqData)
-        .subscribe(() => this.router.navigate(['/user/interviews']));
+        .subscribe({
+          next: () => this.router.navigate(['/user/interviews']),
+          error: (err) => {
+            console.error(err);
+            alert(err.error?.Message || 'Failed to update interview.');
+          },
+        });
     } else {
-      this.interviewService
-        .addInterview(reqData)
-        .subscribe(() => this.router.navigate(['/user/interviews']));
+      this.interviewService.addInterview(reqData).subscribe({
+        next: () => {
+          this.router.navigate(['/user/interviews']);
+        },
+        error: (err) => {
+          const errorMsg =
+            err.error?.Message || 'Failed to add interview. Duplicate round?';
+          alert('Error: ' + errorMsg);
+        },
+      });
     }
   }
 }

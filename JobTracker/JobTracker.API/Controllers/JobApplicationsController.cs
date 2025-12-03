@@ -5,6 +5,7 @@ using JobTracker.Application.DTO;
 using JobTracker.Application.Interfaces;
 using JobTracker.Application.Query.JobApplicationsQuery.GetJobApplicationById;
 using JobTracker.Application.Query.JobApplicationsQuery.GetJobApplications;
+using JobTracker.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,9 +35,13 @@ namespace JobTracker.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<JobApplicationDto>>> GetAll()
+        public async Task<ActionResult<List<JobApplicationDto>>> GetAll([FromQuery] ApplicationStatus? status)
         {
-            GetJobApplicationsQuery query = new GetJobApplicationsQuery { UserId = _currentUserService.UserId };
+            GetJobApplicationsQuery query = new GetJobApplicationsQuery
+            {
+                UserId = _currentUserService.UserId,
+                Status = status
+            };
             List<JobApplicationDto> response = await _mediator.Send(query);
             return Ok(response);
         }

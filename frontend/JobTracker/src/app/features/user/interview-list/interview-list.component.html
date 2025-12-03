@@ -1,4 +1,30 @@
 <div class="table-container">
+  <div
+    class="header-flex"
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    "
+  >
+    <h2 style="margin: 0; border: none">My Interviews</h2>
+
+    <div class="filter-box">
+      <select
+        [ngModel]="filterStatus()"
+        (ngModelChange)="filterStatus.set($any($event))"
+        class="form-select"
+      >
+        <option value="All">All Statuses</option>
+        <option value="Scheduled">Scheduled</option>
+        <option value="Completed">Completed</option>
+        <option value="Cancelled">Cancelled</option>
+        <option value="NoShow">No Show</option>
+      </select>
+    </div>
+  </div>
+
   <table>
     <thead>
       <tr>
@@ -12,15 +38,16 @@
       </tr>
     </thead>
     <tbody>
-      @for (intv of interviews; track intv.id) {
+      @for (intv of interviews(); track intv.id) {
       <tr>
         <td class="fw-bold">
           {{ intv.companyName }} <br />
           <span
             class="text-muted"
             style="font-size: 0.8rem; font-weight: normal"
-            >{{ intv.jobPosition }}</span
           >
+            {{ intv.jobPosition }}
+          </span>
         </td>
         <td>{{ intv.roundName }}</td>
         <td>
@@ -43,9 +70,9 @@
         </td>
         <td>
           @if (intv.locationUrl) {
-          <a [href]="intv.locationUrl" target="_blank" class="link-icon"
-            ><i class="fa-solid fa-video"></i> Join</a
-          >
+          <a [href]="intv.locationUrl" target="_blank" class="link-icon">
+            <i class="fa-solid fa-video"></i> Join
+          </a>
           } @else { - }
         </td>
         <td>{{ intv.status }}</td>
@@ -63,10 +90,7 @@
       </tr>
       } @empty {
       <tr>
-        <td colspan="7" class="empty-state">
-          No interviews scheduled.
-          <a routerLink="/user/interviews/add">Add one?</a>
-        </td>
+        <td colspan="7" class="empty-state">No interviews found.</td>
       </tr>
       }
     </tbody>

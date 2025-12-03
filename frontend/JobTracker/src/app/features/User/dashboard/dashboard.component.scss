@@ -1,11 +1,14 @@
 /* Clean, White Stat Card */
+@use "sass:color";
+$primary-color: #4a90e2;
+
 .stat-card {
   background: #ffffff; /* White background instead of gradient */
   border-radius: 16px; /* Rounder corners look friendlier/less rigid */
   padding: 1.5rem;
   position: relative;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04); /* Very subtle shadow */
-  border: 1px solid rgba(0,0,0,0.05); /* Slight border for definition */
+  border: 1px solid rgba(0, 0, 0, 0.05); /* Slight border for definition */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -16,7 +19,7 @@
 .stat-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-  border-color: rgba(0,0,0,0.1);
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Update Text Colors for White Background */
@@ -45,19 +48,18 @@
   justify-content: center;
   font-size: 1.5rem;
   /* Use a very light background for the icon container based on the icon color */
-  background-color: #f8f9fa; 
+  background-color: #f8f9fa;
 }
 .stat-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), transparent);
   pointer-events: none;
 }
-
 
 /* Defines text-purple for the Offers icon */
 .text-purple {
@@ -84,21 +86,92 @@
   border-radius: 50%;
   display: inline-block;
 }
-.status-dot.primary { background-color: #0d6efd; }
-.status-dot.success { background-color: #198754; }
-.status-dot.danger { background-color: #dc3545; }
-.status-dot.warning { background-color: #ffc107; }
-.status-dot.purple { background-color: #8950fc; }
-.status-dot.orange { background-color: #fd7e14; }
+.status-dot.primary {
+  background-color: #0d6efd;
+}
+.status-dot.success {
+  background-color: #198754;
+}
+.status-dot.danger {
+  background-color: #dc3545;
+}
+.status-dot.warning {
+  background-color: #ffc107;
+}
+.status-dot.purple {
+  background-color: #8950fc;
+}
+.status-dot.orange {
+  background-color: #fd7e14;
+}
 
 /* Custom Light Badges */
-.bg-light-primary { background-color: rgba(13, 110, 253, 0.1); }
-.bg-light-success { background-color: rgba(25, 135, 84, 0.1); }
-.bg-light-danger { background-color: rgba(220, 53, 69, 0.1); }
-.bg-light-warning { background-color: rgba(255, 193, 7, 0.1); }
-.bg-light-purple { background-color: rgba(137, 80, 252, 0.1); }
-.bg-light-orange { background-color: rgba(253, 126, 20, 0.1); }
+.bg-light-primary {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+.bg-light-success {
+  background-color: rgba(25, 135, 84, 0.1);
+}
+.bg-light-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+.bg-light-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+}
+.bg-light-purple {
+  background-color: rgba(137, 80, 252, 0.1);
+}
+.bg-light-orange {
+  background-color: rgba(253, 126, 20, 0.1);
+}
 
 /* Text Colors for Badges */
-.text-purple { color: #8950fc !important; }
-.text-orange { color: #fd7e14 !important; }
+.text-purple {
+  color: #8950fc !important;
+}
+.text-orange {
+  color: #fd7e14 !important;
+}
+
+// Floating Action Button (FAB)
+.fab-btn {
+  position: fixed; // Stays in place when scrolling
+  bottom: 30px; // Distance from bottom
+  right: 30px; // Distance from right
+  width: 60px;
+  height: 60px;
+  background-color: $primary-color; // Uses your blue variable
+  color: white;
+  border-radius: 50%; // Makes it a perfect circle
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); // Drop shadow
+  text-decoration: none; // Removes underline from link
+  font-size: 1.5rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); // Bouncy effect
+  z-index: 1000; // Ensures it floats above everything
+
+  &:hover {
+    transform: scale(1.1) rotate(90deg); // Grows and spins slightly
+    background-color: color.adjust(
+      $primary-color,
+      $lightness: -10%
+    ); // Note: Use color.adjust if using new Sass
+  }
+
+  &:active {
+    transform: scale(0.95); // Click effect
+  }
+}
+
+// Mobile adjustment (Optional)
+@media (max-width: 600px) {
+  .fab-btn {
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+}

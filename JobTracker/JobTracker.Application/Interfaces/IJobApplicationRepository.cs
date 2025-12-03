@@ -5,7 +5,7 @@ namespace JobTracker.Application.Interfaces
 {
     public interface IJobApplicationRepository : IGenericRepository<JobApplication>
     {
-        Task<List<JobApplication>> GetJobApplicationsWithDetailsAsync(int userId);
+        Task<List<JobApplication>> GetJobApplicationsWithDetailsAsync(int userId, ApplicationStatus? filterStatus);
         Task<JobApplication?> GetJobApplicationByIdWithDetailsAsync(int jobId, int userId);
         Task<Dictionary<ApplicationStatus, int>> GetJobStatsByUserIdAsync(int userId);
         Task<bool> IsJobOwnedByUserAsync(int jobId, int userId);

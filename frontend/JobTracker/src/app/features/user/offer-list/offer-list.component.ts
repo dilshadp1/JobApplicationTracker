@@ -1,31 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit, signal } from '@angular/core';
 import { Offer } from '../../models/offer';
 import { OfferService } from '../../../core/services/offer/offer.service';
 import { CurrencyPipe, DatePipe, CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-offer-list',
-  imports: [CommonModule, DatePipe, CurrencyPipe, RouterLink],
+  imports: [CommonModule, DatePipe, CurrencyPipe, RouterLink,FormsModule],
   templateUrl: './offer-list.component.html',
   styleUrl: './offer-list.component.scss',
 })
-export class OfferListComponent implements OnInit {
-  offers: Offer[] = [];
+export class OfferListComponent {
+  offers = signal<Offer[]>([]);
   now = new Date().toISOString();
-  constructor(private offerService: OfferService) {}
 
-  ngOnInit() {
-    this.loadOffers();
+  filterType = signal<string>('All');
+  sortType = signal<string>('Default');
+
+  constructor(private offerService: OfferService) {
+    effect(() => {
+      this.loadOffers();
+    });
   }
 
   loadOffers() {
-    this.offerService.getOffers().subscribe((data) => (this.offers = data));
-  }
-
-  onDelete(id: number) {
-    if (confirm('Are you sure you want to delete this offer?')) {
-      this.offerService.deleteOffer(id).subscribe(() => this.loadOffers());
-    }
+    this.offerService
+      .getOffers(this.filterType(), this.sortType())
+      .subscribe((data) => {
+        this.offers.set(data);
+      });
   }
 }

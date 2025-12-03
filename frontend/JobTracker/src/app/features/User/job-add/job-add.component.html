@@ -57,10 +57,10 @@
             <option [ngValue]="5">Rejected</option>
           </select>
 
-          @if(hasInterviews || hasOffer) {
-          <small class="text-muted" style="color: #e67e22">
-            <i class="fa-solid fa-lock"></i> Some statuses are locked because
-            interviews/offers exist.
+          @if(jobForm.controls.status.disabled) {
+          <small class="text-muted" style="color: #e74c3c">
+            <i class="fa-solid fa-lock"></i> Status is locked because the
+            application is closed.
           </small>
           }
         </div>

@@ -16,7 +16,7 @@
         <label>Job Application <span class="required">*</span></label>
         <select formControlName="applicationId">
           <option [ngValue]="null" disabled>
-            Select the job application...
+            Select an active job application...
           </option>
           @for(job of userJobs; track job.id) {
           <option [ngValue]="job.id">
@@ -24,6 +24,10 @@
           </option>
           }
         </select>
+
+        <small class="text-muted" style="font-size: 0.8rem">
+          * Closed applications (Hired, Rejected, etc.) are hidden.
+        </small>
       </div>
 
       <div class="form-row">
