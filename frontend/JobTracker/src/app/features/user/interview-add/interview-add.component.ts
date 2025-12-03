@@ -8,9 +8,13 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { InterviewService } from '../../../core/services/interview/interview.service';
-import { JobApplicationService } from '../../../core/services/job-application/job-application.service'; // Need this!
+import { JobApplicationService } from '../../../core/services/job-application/job-application.service';
 import { JobApplication } from '../../models/job-application';
-import { InterviewUpdate } from '../../models/interview';
+import {
+  InterviewMode,
+  InterviewStatus,
+  InterviewUpdate,
+} from '../../models/interview';
 
 @Component({
   selector: 'app-interview-add',
@@ -23,12 +27,20 @@ export class InterviewAddComponent implements OnInit {
   interviewId: number | null = null;
   userJobs: JobApplication[] = [];
 
+  eMode = InterviewMode;
+  eStatus = InterviewStatus;
+  originalStatus: InterviewStatus | null = null;
+
   interviewForm = new FormGroup({
     applicationId: new FormControl<number | null>(null, Validators.required),
     roundName: new FormControl('', Validators.required),
     interviewDate: new FormControl('', Validators.required),
-    mode: new FormControl<number>(0),
-    status: new FormControl<number>(0),
+    mode: new FormControl<InterviewMode>(InterviewMode.Online, {
+      nonNullable: true,
+    }),
+    status: new FormControl<InterviewStatus>(InterviewStatus.Scheduled, {
+      nonNullable: true,
+    }),
     locationUrl: new FormControl(''),
     feedback: new FormControl(''),
   });
@@ -55,57 +67,44 @@ export class InterviewAddComponent implements OnInit {
 
   loadInterview(id: number) {
     this.interviewService.getInterview(id).subscribe((intv) => {
-      const dateString = intv.interviewDate;
+      this.originalStatus = intv.status;
+
       let formattedDate = '';
-      if (dateString) {
-        const dateObj = new Date(dateString);
+      if (intv.interviewDate) {
+        const dateObj = new Date(intv.interviewDate);
         dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
         formattedDate = dateObj.toISOString().slice(0, 16);
       }
-
-      const modeMap: any = { Online: 0, Offline: 1, online: 0, offline: 1 };
-      const statusMap: any = {
-        Scheduled: 0,
-        Completed: 1,
-        Cancelled: 2,
-        NoShow: 3,
-        scheduled: 0,
-        completed: 1,
-        cancelled: 2,
-        noshow: 3,
-      };
-
-      const modeValue =
-        typeof intv.mode === 'number' ? intv.mode : modeMap[intv.mode] ?? 0;
-      const statusValue =
-        typeof intv.status === 'number'
-          ? intv.status
-          : statusMap[intv.status] ?? 0;
 
       this.interviewForm.patchValue({
         applicationId: intv.applicationId,
         roundName: intv.roundName,
         interviewDate: formattedDate,
-        mode: modeMap[intv.mode] ?? 0,
-        status: statusMap[intv.status] ?? 0,
+        mode: intv.mode,
+        status: intv.status,
         locationUrl: intv.locationUrl,
         feedback: intv.feedback,
       });
     });
   }
-
+  get isTerminalState(): boolean {
+    return (
+      this.originalStatus === InterviewStatus.Completed ||
+      this.originalStatus === InterviewStatus.Cancelled ||
+      this.originalStatus === InterviewStatus.NoShow
+    );
+  }
   onSubmit() {
     if (this.interviewForm.invalid) return;
 
-    const rawData = this.interviewForm.value;
+    const rawData = this.interviewForm.getRawValue();
 
     const reqData: InterviewUpdate = {
-      userId: 0,
       applicationId: rawData.applicationId!,
       interviewDate: rawData.interviewDate!,
       roundName: rawData.roundName!,
-      mode: rawData.mode!,
-      status: rawData.status!,
+      mode: rawData.mode,
+      status: rawData.status,
       locationUrl: rawData.locationUrl || null,
       feedback: rawData.feedback || null,
     };

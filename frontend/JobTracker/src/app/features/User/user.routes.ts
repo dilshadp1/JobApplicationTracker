@@ -75,6 +75,30 @@ export const userRoutes: Routes = [
           ),
         title: 'Edit Interview',
       },
+      {
+        path: 'offers',
+        loadComponent: () =>
+          import('./offer-list/offer-list.component').then(
+            (m) => m.OfferListComponent
+          ),
+        title: 'My Offers',
+      },
+      {
+        path: 'offers/add',
+        loadComponent: () =>
+          import('./offer-add/offer-add.component').then(
+            (m) => m.OfferAddComponent
+          ),
+        title: 'Record Offer',
+      },
+      {
+        path: 'offers/edit/:id',
+        loadComponent: () =>
+          import('./offer-add/offer-add.component').then(
+            (m) => m.OfferAddComponent
+          ),
+        title: 'Edit Offer',
+      },
     ],
   },
 ];

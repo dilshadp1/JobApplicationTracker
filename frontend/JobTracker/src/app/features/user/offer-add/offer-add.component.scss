@@ -1,0 +1,164 @@
+// 1. THIS MUST BE THE FIRST LINE
+@use "sass:color";
+
+// Variables
+$primary: #4a90e2;
+$secondary: #f4f7f6;
+$text-dark: #2c3e50;
+$text-light: #7f8c8d;
+$border: #dce4ec;
+$white: #ffffff;
+$success: #2ecc71;
+$danger: #e74c3c;
+
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: $secondary;
+  min-height: 80vh;
+}
+
+.form-card {
+  background: $white;
+  width: 100%;
+  max-width: 700px;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+
+  .card-header {
+    margin-bottom: 30px;
+    text-align: center;
+
+    h2 {
+      color: $text-dark;
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+
+      i {
+        color: $primary;
+        margin-right: 10px;
+      }
+    }
+
+    p {
+      color: $text-light;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// Grid Layout for Desktop (2 columns)
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+
+  // Mobile Responsiveness
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $text-dark;
+    margin-bottom: 8px;
+
+    .required {
+      color: $danger;
+    }
+  }
+
+  input,
+  select,
+  textarea {
+    padding: 12px 15px;
+    border: 1px solid $border;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fafafa;
+    width: 100%;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      background-color: $white;
+      // Using rgba is still standard CSS, no change needed here
+      box-shadow: 0 0 0 3px rgba($primary, 0.1);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid $border;
+
+  .btn-cancel {
+    text-decoration: none;
+    color: $text-light;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $text-dark;
+      background-color: #f0f0f0;
+    }
+  }
+
+  .btn-save {
+    background-color: $primary;
+    color: $white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      // REPLACED darken()
+      background-color: color.adjust($primary, $lightness: -10%);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      // REPLACED lighten()
+      background-color: color.adjust($primary, $lightness: 20%);
+      cursor: not-allowed;
+    }
+  }
+}

@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { JobApplication, JobApplicationUpdate } from '../../../features/models/job-application';
+import {
+  JobApplication,
+  JobApplicationUpdate,
+} from '../../../features/models/job-application';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +20,9 @@ export class JobApplicationService {
   getJob(id: number): Observable<JobApplication> {
     return this.http.get<JobApplication>(`${this.apiUrl}/${id}`);
   }
-
-  addJob(formData: JobApplicationUpdate) {
-    return this.http.post(this.apiUrl, formData);
+  
+  addJob(formData: JobApplicationUpdate): Observable<number> {
+    return this.http.post<number>(this.apiUrl, formData);
   }
 
   deleteJob(id: number) {

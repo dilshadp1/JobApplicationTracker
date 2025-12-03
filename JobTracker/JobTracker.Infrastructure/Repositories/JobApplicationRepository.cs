@@ -64,6 +64,15 @@ namespace JobTracker.Infrastructure.Repositories
                 .FirstOrDefaultAsync(j => j.Id == jobId);
         }
 
+        public async Task<bool> JobExistsAsync(int userId, string company, string position, DateTime appliedDate)
+        {
+            // We use .Date to ignore the time component (9:00 AM vs 10:00 AM)
+            return await context.JobApplications
+                .AnyAsync(j => j.UserId == userId
+                            && j.Company.ToLower() == company.ToLower()
+                            && j.Position.ToLower() == position.ToLower()
+                            && j.AppliedDate.Date == appliedDate.Date);
+        }
 
     }
 }

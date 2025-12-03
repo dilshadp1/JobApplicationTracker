@@ -42,22 +42,53 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label>Mode</label>
-          <select formControlName="mode">
-            <option [ngValue]="0">Online</option>
-            <option [ngValue]="1">Offline</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Status</label>
-          <select formControlName="status">
-            <option [ngValue]="0">Scheduled</option>
-            <option [ngValue]="1">Completed</option>
-            <option [ngValue]="2">Cancelled</option>
-          </select>
-        </div>
+      <div class="form-group">
+        <label>Mode</label>
+        <select formControlName="mode">
+          <option [ngValue]="eMode.Online">Online</option>
+          <option [ngValue]="eMode.Offline">Offline</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Status</label>
+        <select formControlName="status">
+          <option [ngValue]="eStatus.Scheduled" [disabled]="isTerminalState">
+            Scheduled
+          </option>
+
+          <option
+            [ngValue]="eStatus.Completed"
+            [disabled]="isTerminalState && originalStatus !== eStatus.Completed"
+          >
+            Completed
+          </option>
+
+          <option
+            [ngValue]="eStatus.Cancelled"
+            [disabled]="isTerminalState && originalStatus !== eStatus.Cancelled"
+          >
+            Cancelled
+          </option>
+
+          <option
+            [ngValue]="eStatus.NoShow"
+            [disabled]="isTerminalState && originalStatus !== eStatus.NoShow"
+          >
+            No Show
+          </option>
+        </select>
+
+        @if(isTerminalState) {
+        <small
+          class="text-muted"
+          style="color: #e67e22; margin-top: 5px; display: block"
+        >
+          <i class="fa-solid fa-lock"></i>
+          This interview is finalized ({{ originalStatus }}) and cannot be
+          changed.
+        </small>
+        }
       </div>
 
       <div class="form-group">
@@ -86,10 +117,4 @@
       </div>
     </form>
   </div>
-</div>
-<div style="background: #eee; padding: 20px; margin-top: 20px; border: 2px dashed red;">
-  <h3>🔍 Form Debugger</h3>
-  <p><strong>Form Status:</strong> {{ interviewForm.status }}</p>
-  <p><strong>Is Valid?</strong> {{ interviewForm.valid }}</p>
-  <pre>{{ interviewForm.value | json }}</pre>
 </div>
