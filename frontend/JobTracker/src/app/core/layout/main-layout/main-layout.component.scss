@@ -169,3 +169,23 @@
   font-weight: bold;
   box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
 }
+.public-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative; /* Create a stacking context */
+}
+
+/* 2. Force the Navbar to stay on top */
+.public-wrapper .navbar {
+  position: relative; 
+  z-index: 1050; /* Bootstrap standard z-index for navbars */
+  background-color: #fff; /* Ensure it's not transparent */
+}
+
+/* 3. Ensure the router outlet content doesn't jump up behind the navbar */
+.public-wrapper router-outlet + * {
+  /* This targets the component loaded by the router */
+  position: relative;
+  z-index: 1; 
+}

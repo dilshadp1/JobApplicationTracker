@@ -1,86 +1,82 @@
+@if (isLoggedIn()) {
 <div class="d-flex" id="wrapper" [class.toggled]="isSidebarToggled">
-      
-  <div class="bg-dark text-white border-end" id="sidebar-wrapper">
-     <div class="sidebar-heading d-flex align-items-center justify-content-center py-4 primary-text fs-4 fw-bold border-bottom border-secondary">
     
-        <div class="brand-logo me-3">
-            <i class="bi bi-briefcase-fill"></i> JT
+    <div class="bg-dark text-white border-end" id="sidebar-wrapper">
+        <div class="sidebar-heading d-flex align-items-center justify-content-center py-4 primary-text fs-4 fw-bold border-bottom border-secondary">
+            <div class="brand-logo me-3">
+                <i class="bi bi-briefcase-fill"></i> JT
+            </div>
+            JobTracker
         </div>
-        JobTracker
-     </div>
-    
-    <div class="list-group list-group-flush my-3">
-      
-
-
-      <!-- @if (isAdmin()) {
-       <a routerLink="/admin/dashboard" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
-        <i class="bi bi-speedometer2 me-2"></i>Dashboard
-      </a>
-      <a routerLink="/profile" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
-          <i class="bi bi-person me-2"></i>Your Profile
-      </a>
-        <div class="sidebar-divider text-muted small px-3 mt-3 mb-1">ADMINISTRATION</div>
         
-        <a routerLink="/admin/users" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
-          <i class="bi bi-people-fill me-2"></i>Manage Users
-        </a>
-        <a routerLink="/admin/settings" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
-          <i class="bi bi-gear-fill me-2"></i>System Settings
-        </a>
-      } -->
-
-      @if (!isAdmin()) {
-      <a routerLink="/user/dashboard" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
-        <i class="bi bi-speedometer2 me-2"></i>Dashboard
-      </a>
-      <a routerLink="/user/profile" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
-          <i class="bi bi-person me-2"></i>Your Profile
-      </a>
-        <div class="sidebar-divider text-muted small px-3 mt-3 mb-1">JOB MANAGEMENT</div>
-
-        <a routerLink="/user/jobs" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
-          <i class="bi bi-list-task me-2"></i>My Jobs
-        </a>
-
-        <a routerLink="/user/interviews" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
-          <i class="bi bi-calendar-event me-2"></i>Interviews
-        </a>
-
-        <a routerLink="/user/offers" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
-          <i class="bi bi-gift me-2"></i>Offers
-        </a>
-      }
-
-    </div>
-    
-    <div class="mt-auto p-3 border-top border-secondary">
-        <button (click)="logout()" class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
-            <i class="bi bi-box-arrow-left me-2"></i> Logout
-        </button>
-    </div>
-  </div>
-
-  <div id="page-content-wrapper">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 border-bottom shadow-sm">
-      <div class="d-flex align-items-center w-100 justify-content-between">
+        <div class="list-group list-group-flush my-3">
+            @if (!isAdmin()) {
+                <a routerLink="/user/dashboard" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
+                    <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                </a>
+                <a routerLink="/user/profile" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
+                    <i class="bi bi-person me-2"></i>Your Profile
+                </a>
+                <div class="sidebar-divider text-muted small px-3 mt-3 mb-1">JOB MANAGEMENT</div>
+                <a routerLink="/user/jobs" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
+                    <i class="bi bi-list-task me-2"></i>My Jobs
+                </a>
+                <a routerLink="/user/interviews" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
+                    <i class="bi bi-calendar-event me-2"></i>Interviews
+                </a>
+                <a routerLink="/user/offers" routerLinkActive="active-link" class="list-group-item list-group-item-action bg-transparent text-white second-text fw-bold">
+                    <i class="bi bi-gift me-2"></i>Offers
+                </a>
+            }
+        </div>
         
-        <div class="d-flex align-items-center">
-          <i class="bi bi-list fs-3  me-3 cursor-pointer" (click)="toggleSidebar()"></i>
-          <h4 class="m-0 text-dark">{{ pageTitle() }}</h4>
+        <div class="mt-auto p-3 border-top border-secondary">
+            <button (click)="logout()" class="btn btn-danger w-100 d-flex align-items-center justify-content-center">
+                <i class="bi bi-box-arrow-left me-2"></i> Logout
+            </button>
         </div>
+    </div>
 
-        <div class="dropdown">
-          <a class="d-flex align-items-center text-decoration-none text-dark fw-bold" role="button" id="userDropdown"  >
-            <span class="d-none d-md-inline">{{ userEmail() }}</span>
-          </a>
+    <div id="page-content-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 border-bottom shadow-sm">
+            <div class="d-flex align-items-center w-100 justify-content-between">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-list fs-3 me-3 cursor-pointer" (click)="toggleSidebar()"></i>
+                    <h4 class="m-0 text-dark">{{ pageTitle() }}</h4>
+                </div>
+                <div class="dropdown">
+                    <a class="d-flex align-items-center text-decoration-none text-dark fw-bold" role="button">
+                        <span class="d-none d-md-inline">{{ userEmail() }}</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid px-4 py-4">
+            <router-outlet></router-outlet>
         </div>
+    </div>
+</div>
+} 
 
-      </div>
+@else {
+<div class="public-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 border-bottom sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center fw-bold text-primary" routerLink="/">
+                <div class="brand-logo me-2" style="width: 35px; height: 35px; font-size: 0.9rem;">
+                    <i class="bi bi-briefcase-fill"></i> JT
+                </div>
+                JobTracker
+            </a>
+            
+            <div class="d-flex gap-2">
+                <a routerLink="/login" class="btn btn-link text-decoration-none text-muted fw-bold">Log In</a>
+                <a routerLink="/register" class="btn btn-primary px-4 rounded-pill fw-bold">Sign Up</a>
+            </div>
+        </div>
     </nav>
 
-    <div class="container-fluid px-4 py-4">
-        <router-outlet></router-outlet>
-    </div>
-  </div>
+    <router-outlet></router-outlet>
 </div>
+}

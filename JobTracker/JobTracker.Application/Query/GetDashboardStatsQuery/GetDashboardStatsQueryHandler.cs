@@ -52,6 +52,7 @@ namespace JobTracker.Application.Query.GetDashboardStatsQuery
             return new DashboardStatsDto
             {
                 TotalApplications = totalApplications,
+                Applied= GetCount(ApplicationStatus.Applied),
                 Interviewing = GetCount(ApplicationStatus.Interviewing),
                 Offers = GetCount(ApplicationStatus.OfferReceived),
                 Rejected = GetCount(ApplicationStatus.Rejected),

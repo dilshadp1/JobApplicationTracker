@@ -1,12 +1,14 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../../core/auth/guards/auth.guard';
 import { MainLayoutComponent } from '../../core/layout/main-layout/main-layout.component';
+import { roleGuard } from '../../core/auth/guards/role.guard';
 
 export const userRoutes: Routes = [
   {
     path: '',
-    component: MainLayoutComponent,
-    canActivate: [authGuard],
+    // component: MainLayoutComponent,
+    canActivate: [roleGuard],
+    data:{roles:['User']},
     children: [
       {
         path: '',

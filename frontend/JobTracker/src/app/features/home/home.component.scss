@@ -1,0 +1,98 @@
+/* --- Global Layout --- */
+.landing-wrapper {
+  background-color: #f8f9fa; /* Matches Dashboard BG */
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* --- Typography --- */
+.tight-heading {
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  color: #2c3e50 !important;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+  min-height: 85vh;
+  padding: 4rem 0;
+}
+
+/* --- Buttons --- */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+/* --- Visual Teaser Area --- */
+.blob-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(13, 110, 253, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+/* --- REUSED DASHBOARD STYLES (Exact Match) --- */
+.stat-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Slightly stronger shadow for landing page depth */
+  border: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.stat-number {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.1rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6c757d;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  background-color: #f8f9fa;
+}
+
+/* Colors */
+.text-purple { color: #8950fc !important; }
+.text-warning { color: #ffc107 !important; }
+.text-primary { color: #0d6efd !important; }
+
+/* --- Floating Animation (Subtle movement) --- */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.floating-1 { animation: float 6s ease-in-out infinite; }
+.floating-2 { animation: float 5s ease-in-out infinite; animation-delay: 1s; }
+.floating-3 { animation: float 7s ease-in-out infinite; animation-delay: 2s; }

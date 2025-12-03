@@ -3,6 +3,7 @@ import { UpcomingInterview } from "./upcoming-interview";
 
 export interface DashboardStats {
   totalApplications: number;
+  applied:number;
   interviewing: number;
   offers: number;
   rejected: number;

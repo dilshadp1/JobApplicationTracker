@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { DashboardStats } from '../../models/dashboard-model';
 import { UpcomingInterviewsComponent } from './components/upcoming-interviews/upcoming-interviews.component';
 import { RecentActivityComponent } from './components/recent-activity/recent-activity.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [UpcomingInterviewsComponent,CommonModule,RecentActivityComponent],
+  imports: [UpcomingInterviewsComponent,CommonModule,RecentActivityComponent,RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -23,7 +24,7 @@ export class DashboardComponent implements OnInit {
     if (!data) return [];
 
     return [
-      { label: 'Total', value: data.totalApplications, icon: 'bi-briefcase-fill', colorClass: 'card-yellow', textClass: 'text-warning' },
+      { label: 'Applied', value: data.applied, icon: 'bi-briefcase-fill', colorClass: 'card-yellow', textClass: 'text-warning' },
       { label: 'Interviews', value: data.interviewing, icon: 'bi-calendar-check-fill', colorClass: 'card-blue', textClass: 'text-primary' },
       { label: 'Offers', value: data.offers, icon: 'bi-gift-fill', colorClass: 'card-purple', textClass: 'text-purple' },
       { label: 'Hired', value: data.hired, icon: 'bi-check-circle-fill', colorClass: 'card-green', textClass: 'text-success' },

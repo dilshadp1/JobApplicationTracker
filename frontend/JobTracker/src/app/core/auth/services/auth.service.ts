@@ -41,6 +41,10 @@ export class AuthService {
   
 
   logout(): void {
+    this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe({
+      error: (err) => console.error('Logout API failed', err)
+    });
+    
     localStorage.removeItem(this.tokenKey);
     this.currentUser.set(false);
     this.userData.set(null);
