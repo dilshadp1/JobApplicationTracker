@@ -27,9 +27,12 @@ export class InterviewAddComponent implements OnInit {
   interviewId: number | null = null;
   userJobs: JobApplication[] = [];
 
+  minDate: string = '';
+
+  originalStatus: InterviewStatus | null = null;
+
   eMode = InterviewMode;
   eStatus = InterviewStatus;
-  originalStatus: InterviewStatus | null = null;
 
   interviewForm = new FormGroup({
     applicationId: new FormControl<number | null>(null, Validators.required),
@@ -60,29 +63,41 @@ export class InterviewAddComponent implements OnInit {
       );
     });
 
+    this.interviewForm.controls.applicationId.valueChanges.subscribe(
+      (selectedJobId) => {
+        if (selectedJobId) {
+          const selectedJob = this.userJobs.find((j) => j.id === selectedJobId);
+          if (selectedJob) {
+            this.minDate = new Date(selectedJob.appliedDate)
+              .toISOString()
+              .split('T')[0];
+          }
+        }
+      }
+    );
+
     const id = this.route.snapshot.paramMap.get('id');
+    const queryJobId = this.route.snapshot.queryParamMap.get('jobId');
+
     if (id) {
       this.isEditMode = true;
       this.interviewId = +id;
       this.loadInterview(this.interviewId);
-    } else {
-      const preSelectJobId = this.route.snapshot.queryParamMap.get('jobId');
-      if (preSelectJobId) {
-        this.interviewForm.patchValue({ applicationId: +preSelectJobId });
-      }
+    } else if (queryJobId) {
+      this.interviewForm.patchValue({ applicationId: +queryJobId });
     }
   }
 
   loadInterview(id: number) {
     this.interviewService.getInterview(id).subscribe((intv) => {
-      this.originalStatus = intv.status;
-
       let formattedDate = '';
       if (intv.interviewDate) {
         const dateObj = new Date(intv.interviewDate);
         dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
         formattedDate = dateObj.toISOString().slice(0, 16);
       }
+
+      this.originalStatus = intv.status;
 
       this.interviewForm.patchValue({
         applicationId: intv.applicationId,
@@ -93,8 +108,13 @@ export class InterviewAddComponent implements OnInit {
         locationUrl: intv.locationUrl,
         feedback: intv.feedback,
       });
+
+      this.jobService.getJob(intv.applicationId).subscribe((job) => {
+        this.minDate = new Date(job.appliedDate).toISOString().split('T')[0];
+      });
     });
   }
+
   get isTerminalState(): boolean {
     return (
       this.originalStatus === InterviewStatus.Completed ||
@@ -102,6 +122,7 @@ export class InterviewAddComponent implements OnInit {
       this.originalStatus === InterviewStatus.NoShow
     );
   }
+
   onSubmit() {
     if (this.interviewForm.invalid) return;
 
@@ -123,19 +144,14 @@ export class InterviewAddComponent implements OnInit {
         .subscribe({
           next: () => this.router.navigate(['/user/interviews']),
           error: (err) => {
-            console.error(err);
             alert(err.error?.Message || 'Failed to update interview.');
           },
         });
     } else {
       this.interviewService.addInterview(reqData).subscribe({
-        next: () => {
-          this.router.navigate(['/user/interviews']);
-        },
+        next: () => this.router.navigate(['/user/interviews']),
         error: (err) => {
-          const errorMsg =
-            err.error?.Message || 'Failed to add interview. Duplicate round?';
-          alert('Error: ' + errorMsg);
+          alert(err.error?.Message || 'Failed to add interview.');
         },
       });
     }

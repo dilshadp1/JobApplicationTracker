@@ -12,13 +12,18 @@ namespace JobTracker.Application.Command.InterviewCommands.UpdateInterview
     {
         public async Task<int> Handle(UpdateInterviewCommand command, CancellationToken cancellationToken)
         {
-            var interview = await interviewRepository.GetInterviewByIdWithJobAsync(command.Id);
+            Interview? interview = await interviewRepository.GetInterviewByIdWithJobAsync(command.Id);
 
             if (interview == null)
                 throw new KeyNotFoundException($"Interview with ID {command.Id} not found.");
 
             if (interview.JobApplication.UserId != command.UserId)
                 throw new UnauthorizedAccessException("Not your interview to edit.");
+
+            if (command.InterviewDate.Date < interview.JobApplication.AppliedDate.Date)
+            {
+                throw new InvalidOperationException($"Interview date ({command.InterviewDate.ToShortDateString()}) cannot be earlier than the application date ({interview.JobApplication.AppliedDate.ToShortDateString()}).");
+            }
 
             if (interview.Status == InterviewStatus.Completed && command.Status != InterviewStatus.Completed)
             {

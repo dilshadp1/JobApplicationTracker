@@ -40,7 +40,17 @@
       <div class="form-row">
         <div class="form-group">
           <label>Offer Received Date</label>
-          <input type="date" formControlName="offerDate" [max]="today" />
+          <input
+            type="date"
+            formControlName="offerDate"
+            [max]="today"
+            [min]="minDate"
+          />
+          @if(minDate) {
+          <small class="text-muted"
+            >Must be after applied date: {{ minDate }}</small
+          >
+          }
         </div>
         <div class="form-group">
           <label>Deadline to Accept</label>
