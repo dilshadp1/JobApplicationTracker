@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthService } from '../../services/auth-services/auth.service';
 import {
   ActivatedRoute,
   NavigationEnd,
