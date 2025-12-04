@@ -30,25 +30,25 @@ namespace JobTracker.API.Middleware
             if (ex is ValidationException validationEx)
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                object response = new { Error = validationEx.Errors };
+                object response = new { error = validationEx.Errors };
                 await context.Response.WriteAsJsonAsync(response);
             }
             else if (ex is UnauthorizedAccessException unauthorizedEx )
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                object response = new { Error = unauthorizedEx.Message };
+                object response = new { error = unauthorizedEx.Message };
                 await context.Response.WriteAsJsonAsync(response);
             }
             else if (ex is KeyNotFoundException) 
             {
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
-                object response = new { Error = ex.Message };
+                object response = new { error = ex.Message };
                 await context.Response.WriteAsJsonAsync(response);
             }
             else if (ex is InvalidOperationException)
             {
                 context.Response.StatusCode = StatusCodes.Status409Conflict;
-                object response = new { Error = ex.Message };
+                object response = new { error = ex.Message };
                 await context.Response.WriteAsJsonAsync(response);
             }
             else

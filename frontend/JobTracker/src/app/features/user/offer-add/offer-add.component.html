@@ -1,97 +1,54 @@
 <div class="form-wrapper">
   <div class="form-card">
     <div class="card-header">
-      <h2>
-        <i
-          class="fa-solid"
-          [class.fa-hand-holding-dollar]="!isEditMode"
-          [class.fa-pen]="isEditMode"
-        ></i>
-        {{ isEditMode ? "Edit Offer" : "Record New Offer" }}
-      </h2>
+      <h2>{{ isEditMode ? "Edit Offer" : "Record New Offer" }}</h2>
     </div>
 
     <form [formGroup]="offerForm" (ngSubmit)="onSubmit()">
+      
+      @if (offerForm.errors?.['offerBeforeApplied'] && offerForm.get('offerDate')?.touched) {
+        <div class="error-banner">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Offer date cannot be before the Applied Date ({{minDate}}).
+        </div>
+      }
+
       <div class="form-group">
         <label>Job Application</label>
-        <input
-          type="text"
-          [value]="selectedJobDisplay"
-          readonly
-          style="
-            background-color: #e9ecef;
-            cursor: not-allowed;
-            color: #555;
-            font-weight: bold;
-          "
-        />
-        <input type="hidden" formControlName="applicationId" />
+        <input type="text" [value]="selectedJobDisplay" readonly class="readonly-input" />
       </div>
 
       <div class="form-group">
         <label>Offered Salary <span class="required">*</span></label>
-        <input
-          type="number"
-          formControlName="salary"
-          placeholder="e.g. 95000"
-        />
+        <input type="number" formControlName="salary" placeholder="e.g. 95000" />
       </div>
 
       <div class="form-row">
         <div class="form-group">
           <label>Offer Received Date</label>
-          <input
-            type="date"
-            formControlName="offerDate"
-            [max]="today"
-            [min]="minDate"
-          />
-          @if(minDate) {
-          <small class="text-muted"
-            >Must be after applied date: {{ minDate }}</small
-          >
-          }
+          <input type="date" formControlName="offerDate" [max]="today" [min]="minDate" />
         </div>
         <div class="form-group">
           <label>Deadline to Accept</label>
-          <input
-            type="date"
-            formControlName="deadline"
-            [min]="offerForm.get('offerDate')?.value"
-          />
+          <input type="date" formControlName="deadline" />
         </div>
       </div>
 
-      @if (offerForm.hasError('invalidDateRange') &&
-      offerForm.get('deadline')?.touched) {
-      <div
-        style="
-          color: #e74c3c;
-          font-size: 0.9rem;
-          margin-top: -10px;
-          margin-bottom: 15px;
-          text-align: center;
-        "
-      >
+      @if (offerForm.errors?.['invalidDateRange'] && offerForm.get('deadline')?.touched) {
+      <div class="text-error">
         <i class="fa-solid fa-circle-exclamation"></i>
         The deadline cannot be earlier than the offer date.
       </div>
       }
 
       <div class="form-group full-width">
-        <label>Benefits / Perks / Stock Options</label>
-        <textarea
-          formControlName="benefits"
-          rows="4"
-          placeholder="e.g. 10% Bonus, 20 Days PTO, Remote..."
-        ></textarea>
+        <label>Benefits / Perks</label>
+        <textarea formControlName="benefits" rows="4"></textarea>
       </div>
 
       <div class="form-actions">
         <a routerLink="/user/offers" class="btn-cancel">Cancel</a>
-        <button type="submit" class="btn-save" [disabled]="!offerForm.valid">
-          Save Offer
-        </button>
+        <button type="submit" class="btn-save" [disabled]="!offerForm.valid">Save Offer</button>
       </div>
     </form>
   </div>

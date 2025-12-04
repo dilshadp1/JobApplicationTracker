@@ -25,7 +25,7 @@ export class OfferAddComponent implements OnInit {
   selectedJobDisplay: string = 'Loading...';
 
   today: string = new Date().toISOString().split('T')[0];
-  minDate: string = '';
+  minDate: string = ''; // Applied Date
 
   offerForm = new FormGroup(
     {
@@ -38,7 +38,12 @@ export class OfferAddComponent implements OnInit {
       deadline: new FormControl('', Validators.required),
       benefits: new FormControl(''),
     },
-    { validators: this.dateRangeValidator }
+    {
+      validators: [
+        this.dateRangeValidator,
+        this.appliedDateValidator.bind(this),
+      ],
+    }
   );
 
   constructor(
@@ -69,7 +74,9 @@ export class OfferAddComponent implements OnInit {
     this.jobService.getJob(jobId).subscribe({
       next: (job) => {
         this.selectedJobDisplay = `${job.company} - ${job.position}`;
-        this.minDate = new Date(job.appliedDate).toISOString().split('T')[0];
+        // Fix: Direct Split
+        this.minDate = job.appliedDate.toString().split('T')[0];
+        this.offerForm.updateValueAndValidity();
       },
       error: () => {
         this.selectedJobDisplay = 'Job not found';
@@ -79,6 +86,7 @@ export class OfferAddComponent implements OnInit {
 
   loadOffer(id: number) {
     this.offerService.getOffer(id).subscribe((offer) => {
+      // Fix: Direct Split to correct timezone issues
       const safeOfferDate = offer.offerDate.toString().split('T')[0];
       const safeDeadline = offer.deadline.toString().split('T')[0];
 
@@ -94,12 +102,21 @@ export class OfferAddComponent implements OnInit {
     });
   }
 
+  // Validator: Deadline >= Offer Date
   dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const start = control.get('offerDate')?.value;
     const end = control.get('deadline')?.value;
-
-    if (start && end && new Date(end) < new Date(start)) {
+    if (start && end && end < start) {
       return { invalidDateRange: true };
+    }
+    return null;
+  }
+
+  // Validator: Offer Date >= Applied Date
+  appliedDateValidator(control: AbstractControl): ValidationErrors | null {
+    const offerDate = control.get('offerDate')?.value;
+    if (offerDate && this.minDate && offerDate < this.minDate) {
+      return { offerBeforeApplied: true };
     }
     return null;
   }
@@ -108,7 +125,6 @@ export class OfferAddComponent implements OnInit {
     if (this.offerForm.invalid) return;
 
     const val = this.offerForm.getRawValue();
-
     const reqData: OfferUpdate = {
       applicationId: val.applicationId!,
       salary: val.salary!,
@@ -117,26 +133,33 @@ export class OfferAddComponent implements OnInit {
       benefits: val.benefits || null,
     };
 
-    if (this.isEditMode && this.offerId) {
-      this.offerService.updateOffer(this.offerId, reqData).subscribe({
-        next: () => this.router.navigate(['/user/offers']),
-        error: (err) => alert(err.error?.Message || 'Failed to update offer'),
-      });
-    } else {
-      this.offerService.addOffer(reqData).subscribe({
-        next: () => this.router.navigate(['/user/offers']),
-        error: (err) => alert(err.error?.Message || 'Failed to add offer'),
-      });
-    }
+    const action$ =
+      this.isEditMode && this.offerId
+        ? this.offerService.updateOffer(this.offerId, reqData)
+        : this.offerService.addOffer(reqData);
+
+    action$.subscribe({
+      next: () => this.router.navigate(['/user/offers']),
+      error: (err) => {
+        let errorData =
+          err.error?.error ||
+          err.error?.Error ||
+          err.error?.message ||
+          err.error?.Message ||
+          'An unexpected error occurred.';
+
+        if (Array.isArray(errorData)) {
+          errorData = errorData.join('\n');
+        } else if (typeof errorData === 'object') {
+          errorData = JSON.stringify(errorData);
+        }
+        alert(errorData);
+      },
+    });
   }
 
   onDelete() {
-    if (
-      this.offerId &&
-      confirm(
-        'Are you sure? Deleting this offer will revert the Job Status if no other offers exist.'
-      )
-    ) {
+    if (this.offerId && confirm('Are you sure?')) {
       this.offerService.deleteOffer(this.offerId).subscribe(() => {
         this.router.navigate(['/user/offers']);
       });

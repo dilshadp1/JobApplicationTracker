@@ -162,3 +162,14 @@ form {
     }
   }
 }
+.error-banner {
+  background-color: #fee2e2;
+  color: #dc2626;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

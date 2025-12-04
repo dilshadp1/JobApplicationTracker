@@ -15,8 +15,6 @@ export class InterviewListComponent {
   interviews = signal<Interview[]>([]);
   filterStatus = signal<string>('All');
 
-  // modeLabels: any = { 0: 'Online', 1: 'Offline', 'Online': 'Online', 'Offline': 'Offline' };
-
   constructor(private interviewService: InterviewService) {
     effect(() => {
       this.loadInterviews();
