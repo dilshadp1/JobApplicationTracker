@@ -26,8 +26,7 @@ export class RegisterUserComponent {
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W]).{6,}$/)]],
-      confirmPassword: ['', [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
+      confirmPassword: ['', [Validators.required]]}, { validators: this.passwordMatchValidator });
   }
 
   passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -81,7 +80,7 @@ export class RegisterUserComponent {
         this.isLoading = false;
         console.error('Registration error:', error);
         
-        const backendMsg = error.error?.error || error.error?.Error || error.error?.message;
+        const backendMsg = error.error?.error ;
 
         let validationMsg = '';
         if (error.error?.errors) {
