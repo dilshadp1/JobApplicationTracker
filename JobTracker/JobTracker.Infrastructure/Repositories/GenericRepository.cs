@@ -53,7 +53,6 @@ namespace JobTracker.Infrastructure.Repositories
 
         public async Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
         {
-            // This generates "SELECT TOP 1 * ..." SQL query
             return await _context.Set<T>().FirstOrDefaultAsync(predicate);
         }
     }

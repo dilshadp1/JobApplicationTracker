@@ -62,20 +62,18 @@ namespace JobTracker.Infrastructure.Repositories
 
         public async Task<bool> IsJobOwnedByUserAsync(int jobId, int userId)
         {
-            // This runs a "SELECT 1" or "EXISTS" query, not a "SELECT *"
             return await context.JobApplications
                 .AnyAsync(j => j.Id == jobId && j.UserId == userId);
         }
         public async Task<JobApplication?> GetJobWithOfferAsync(int jobId)
         {
             return await context.JobApplications
-                .Include(j => j.Offer) // Join with Offer table
+                .Include(j => j.Offer) 
                 .FirstOrDefaultAsync(j => j.Id == jobId);
         }
 
         public async Task<bool> JobExistsAsync(int userId, string company, string position, DateTime appliedDate)
         {
-            // We use .Date to ignore the time component (9:00 AM vs 10:00 AM)
             return await context.JobApplications
                 .AnyAsync(j => j.UserId == userId
                             && j.Company.ToLower() == company.ToLower()

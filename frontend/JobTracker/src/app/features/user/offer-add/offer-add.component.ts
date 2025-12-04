@@ -25,7 +25,7 @@ export class OfferAddComponent implements OnInit {
   selectedJobDisplay: string = 'Loading...';
 
   today: string = new Date().toISOString().split('T')[0];
-  minDate: string = ''; // Applied Date
+  minDate: string = '';
 
   offerForm = new FormGroup(
     {
@@ -86,7 +86,6 @@ export class OfferAddComponent implements OnInit {
 
   loadOffer(id: number) {
     this.offerService.getOffer(id).subscribe((offer) => {
-      // Fix: Direct Split to correct timezone issues
       const safeOfferDate = offer.offerDate.toString().split('T')[0];
       const safeDeadline = offer.deadline.toString().split('T')[0];
 
@@ -102,7 +101,6 @@ export class OfferAddComponent implements OnInit {
     });
   }
 
-  // Validator: Deadline >= Offer Date
   dateRangeValidator(control: AbstractControl): ValidationErrors | null {
     const start = control.get('offerDate')?.value;
     const end = control.get('deadline')?.value;
@@ -112,7 +110,6 @@ export class OfferAddComponent implements OnInit {
     return null;
   }
 
-  // Validator: Offer Date >= Applied Date
   appliedDateValidator(control: AbstractControl): ValidationErrors | null {
     const offerDate = control.get('offerDate')?.value;
     if (offerDate && this.minDate && offerDate < this.minDate) {

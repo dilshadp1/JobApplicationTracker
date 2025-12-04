@@ -46,7 +46,7 @@ namespace JobTracker.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<InterviewDto>> GetById(int id)
         {
-            var query = new GetInterviewByIdQuery { Id = id, UserId = _currentUserService.UserId };
+            GetInterviewByIdQuery? query = new GetInterviewByIdQuery { Id = id, UserId = _currentUserService.UserId };
             return Ok(await _mediator.Send(query));
         }
 

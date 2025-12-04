@@ -20,10 +20,8 @@ import { forkJoin, map } from 'rxjs';
   styleUrl: './job-add.component.scss',
 })
 export class JobAddComponent implements OnInit {
-  // Default max is today, but this will change if interviews exist
   public maxDate: string = new Date().toISOString().split('T')[0];
 
-  // Variables to hold the logic for the restriction
   public restrictionDate: string | null = null;
   public restrictionReason: string = '';
 
@@ -104,24 +102,17 @@ export class JobAddComponent implements OnInit {
         this.jobForm.controls.status.disable();
       }
 
-      // Calculate the Date Constraints based on existing Interviews/Offers
       this.calculateDateConstraints(id);
     });
   }
 
-  /**
-   * Fetches Interviews and Offers to find the earliest date.
-   * The Applied Date cannot be after the First Interview or Offer.
-   */
   calculateDateConstraints(jobId: number) {
-    // We use forkJoin to run these in parallel
     forkJoin({
-      interviews: this.interviewService.getInterviews(), // Gets all, we must filter
-      offers: this.offerService.getOffers(), // Gets all, we must filter
+      interviews: this.interviewService.getInterviews(),
+      offers: this.offerService.getOffers(),
     })
       .pipe(
         map((data) => {
-          // 1. Filter for this job
           const jobInterviews = data.interviews.filter(
             (i) => i.applicationId === jobId
           );
@@ -129,10 +120,8 @@ export class JobAddComponent implements OnInit {
             (o) => o.applicationId === jobId
           );
 
-          // 2. Find earliest dates
           let earliestIntDate = '';
           if (jobInterviews.length > 0) {
-            // Sort ascending
             jobInterviews.sort((a, b) =>
               a.interviewDate > b.interviewDate ? 1 : -1
             );
@@ -152,17 +141,14 @@ export class JobAddComponent implements OnInit {
       .subscribe(({ earliestIntDate, earliestOfferDate }) => {
         const today = new Date().toISOString().split('T')[0];
 
-        // Default constraint is Today (can't apply in future)
         let limit = today;
         let reason = 'Cannot be in the future.';
 
-        // If Interview exists and is earlier than current limit
         if (earliestIntDate && earliestIntDate < limit) {
           limit = earliestIntDate;
           reason = `Cannot be after the first interview (${earliestIntDate}).`;
         }
 
-        // If Offer exists and is earlier than current limit
         if (earliestOfferDate && earliestOfferDate < limit) {
           limit = earliestOfferDate;
           reason = `Cannot be after the offer date (${earliestOfferDate}).`;
@@ -171,7 +157,6 @@ export class JobAddComponent implements OnInit {
         this.maxDate = limit;
         this.restrictionReason = reason;
 
-        // Update validity in case the current value is now invalid
         this.jobForm.controls.appliedDate.updateValueAndValidity();
       });
   }
@@ -181,7 +166,6 @@ export class JobAddComponent implements OnInit {
 
     const formValue = this.jobForm.getRawValue();
 
-    // Final Safety Check (Double ensure date isn't past max)
     if (formValue.appliedDate > this.maxDate) {
       alert(`Invalid Date: ${this.restrictionReason}`);
       return;
@@ -222,8 +206,7 @@ export class JobAddComponent implements OnInit {
 
         if (Array.isArray(errorData)) {
           errorData = errorData.join('\n');
-        }
-        else if (typeof errorData === 'object') {
+        } else if (typeof errorData === 'object') {
           errorData = JSON.stringify(errorData);
         }
         alert(errorData);

@@ -30,7 +30,7 @@ namespace JobTracker.Infrastructure.Repositories
 
         public async Task<List<Interview>> GetAllInterviewsByUserIdAsync(int userId, InterviewStatus? filterStatus)
         {
-            var query = context.Interviews
+            IQueryable<Interview> query = context.Interviews
                 .Include(i => i.JobApplication)
                 .Where(i => i.JobApplication.UserId == userId);
 
@@ -39,7 +39,7 @@ namespace JobTracker.Infrastructure.Repositories
                 query = query.Where(i => i.Status == filterStatus.Value);
             }
 
-            var now = DateTime.UtcNow;
+            DateTime now = DateTime.UtcNow;
 
             query = query
                 .OrderBy(i => i.InterviewDate < now)
