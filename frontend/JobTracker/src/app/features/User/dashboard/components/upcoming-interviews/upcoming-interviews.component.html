@@ -17,7 +17,7 @@
             <tr>
               <th class="ps-4">Company</th>
               <th>Role</th>
-              <th>Date & Time</th>
+              <th>Date</th>
               <th>Round</th>
               <th>Mode</th>
             </tr>
@@ -29,7 +29,7 @@
                 <td>{{ interview.position }}</td>
                 <td>
                   <!-- Date formatting -->
-                  <span class="text-primary fw-medium">{{ interview.date | date:'MMM d, h:mm a' }}</span>
+                  <span class="text-primary fw-medium">{{ interview.date | date:'mediumDate' }}</span>
                 </td>
                 <td>
                   <span class="badge bg-light text-dark border">{{ interview.roundName }}</span>
