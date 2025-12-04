@@ -15,14 +15,14 @@ namespace JobTracker.Infrastructure.Services
 
         private int GetUserId()
         {
-            var user = httpContextAccessor.HttpContext?.User;
+            ClaimsPrincipal? user = httpContextAccessor.HttpContext?.User;
 
             if (user?.Identity?.IsAuthenticated != true)
             {
                 throw new UnauthorizedAccessException("User is not authenticated.");
             }
 
-            var idClaim = user.FindFirst(ClaimTypes.NameIdentifier);
+            Claim? idClaim = user.FindFirst(ClaimTypes.NameIdentifier);
 
             idClaim ??= user.FindFirst("sub");
 
