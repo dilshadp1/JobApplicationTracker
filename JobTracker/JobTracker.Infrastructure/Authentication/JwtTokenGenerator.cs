@@ -14,22 +14,22 @@ namespace JobTracker.Infrastructure.Authentication
     {
         public string GenerateToken(User user)
         {
-            var secretKey = configuration["JwtSettings:Secret"]!;
-            var issuer = configuration["JwtSettings:Issuer"];
-            var audience = configuration["JwtSettings:Audience"];
-            var expiryMinutes = double.Parse(configuration["JwtSettings:ExpiryMinutes"]!);
+            string secretKey = configuration["JwtSettings:Secret"]!;
+            string issuer = configuration["JwtSettings:Issuer"];
+            string audience = configuration["JwtSettings:Audience"];
+            double expiryMinutes = double.Parse(configuration["JwtSettings:ExpiryMinutes"]!);
 
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            Claim[] claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()), 
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),       
                 new Claim("role", user.Role.ToString())                     
             };
 
-            var token = new JwtSecurityToken(
+            JwtSecurityToken token = new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
@@ -41,7 +41,7 @@ namespace JobTracker.Infrastructure.Authentication
 
         public string GenerateRefreshToken()
         {
-            var randomNumber = new byte[32];
+            byte[] randomNumber = new byte[32];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
