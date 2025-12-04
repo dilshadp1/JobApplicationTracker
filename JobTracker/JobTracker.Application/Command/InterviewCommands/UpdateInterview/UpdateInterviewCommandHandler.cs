@@ -39,31 +39,8 @@ namespace JobTracker.Application.Command.InterviewCommands.UpdateInterview
                 command.Feedback
             );
 
-            bool jobStatusChanged = false;
-
-            if (command.Status == InterviewStatus.Cancelled)
-            {
-                if (interview.JobApplication.Status != ApplicationStatus.Rejected)
-                {
-                    interview.JobApplication.UpdateStatus(ApplicationStatus.Rejected);
-                    jobStatusChanged = true;
-                }
-            }
-            else if (command.Status == InterviewStatus.NoShow)
-            {
-                if (interview.JobApplication.Status != ApplicationStatus.Declined)
-                {
-                    interview.JobApplication.UpdateStatus(ApplicationStatus.Declined);
-                    jobStatusChanged = true;
-                }
-            }
 
             await interviewRepository.UpdateAsync(interview);
-
-            if (jobStatusChanged)
-            {
-                await jobRepository.UpdateAsync(interview.JobApplication);
-            }
 
             return interview.Id;
         }

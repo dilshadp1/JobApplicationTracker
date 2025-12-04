@@ -8,8 +8,6 @@
       margin-bottom: 20px;
     "
   >
-    <h2 style="margin: 0; border: none">My Interviews</h2>
-
     <div class="filter-box">
       <select
         [ngModel]="filterStatus()"
@@ -30,9 +28,9 @@
       <tr>
         <th>Job Role</th>
         <th>Round</th>
-        <th>Date & Time</th>
+        <th>Date</th>
         <th>Mode</th>
-        <th>Link</th>
+        <th>Link / Location</th>
         <th>Status</th>
         <th class="text-center">Actions</th>
       </tr>
@@ -54,10 +52,6 @@
           <div style="font-weight: bold">
             {{ intv.interviewDate | date : "MMM d, y" }}
           </div>
-          <div style="font-size: 0.85rem; color: #666">
-            <i class="fa-regular fa-clock"></i>
-            {{ intv.interviewDate | date : "h:mm a" }}
-          </div>
         </td>
         <td>
           <span
@@ -68,13 +62,22 @@
             {{ intv.mode }}
           </span>
         </td>
+
         <td>
           @if (intv.locationUrl) {
           <a [href]="intv.locationUrl" target="_blank" class="link-icon">
-            <i class="fa-solid fa-video"></i> Join
+            <i
+              class="fa-solid"
+              [class.fa-video]="intv.mode === 'Online'"
+              [class.fa-map-location-dot]="intv.mode === 'Offline'"
+            >
+            </i>
+
+            {{ intv.mode === "Online" ? "Join" : "Map" }}
           </a>
           } @else { - }
         </td>
+
         <td>{{ intv.status }}</td>
         <td class="text-center">
           <a

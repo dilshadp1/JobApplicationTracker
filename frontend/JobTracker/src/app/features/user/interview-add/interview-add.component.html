@@ -12,6 +12,27 @@
     </div>
 
     <form [formGroup]="interviewForm" (ngSubmit)="onSubmit()">
+      @if (interviewForm.errors?.['appliedDateConflict'] &&
+      interviewForm.get('interviewDate')?.touched) {
+      <div class="error-banner">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        Interview cannot be before the Applied Date ({{ minDate | date }}).
+      </div>
+      } @if (interviewForm.errors?.['offerDateConflict'] &&
+      interviewForm.get('interviewDate')?.touched) {
+      <div class="error-banner">
+        <i class="fa-solid fa-hand-paper"></i>
+        Interview cannot be scheduled after the Offer Date ({{
+          maxDate | date
+        }}).
+      </div>
+      } @if (interviewForm.errors?.['futureDateCompleted']) {
+      <div class="error-banner">
+        <i class="fa-solid fa-clock"></i>
+        You cannot mark an interview as "Completed" if it is in the future.
+      </div>
+      }
+
       <div class="form-group">
         <label>Job Application <span class="required">*</span></label>
         <select formControlName="applicationId">
@@ -24,10 +45,6 @@
           </option>
           }
         </select>
-
-        <small class="text-muted" style="font-size: 0.8rem">
-          * Closed applications (Hired, Rejected, etc.) are hidden.
-        </small>
       </div>
 
       <div class="form-row">
@@ -41,15 +58,21 @@
         </div>
 
         <div class="form-group">
-          <label>Date & Time</label>
+          <label>Date</label>
           <input
-            type="datetime-local"
+            type="date"
             formControlName="interviewDate"
             [min]="minDate"
+            [max]="maxDate"
           />
-          @if(minDate) {
-          <small class="text-muted" style="font-size: 0.75rem">
-            Must be after {{ minDate | date }}
+
+          @if(maxDate) {
+          <small
+            class="text-muted"
+            style="font-size: 0.75rem; color: #e67e22 !important"
+          >
+            <i class="fa-solid fa-info-circle"></i> Limited to Offer Date:
+            {{ maxDate | date }}
           </small>
           }
         </div>
@@ -69,21 +92,18 @@
           <option [ngValue]="eStatus.Scheduled" [disabled]="isTerminalState">
             Scheduled
           </option>
-
           <option
             [ngValue]="eStatus.Completed"
             [disabled]="isTerminalState && originalStatus !== eStatus.Completed"
           >
             Completed
           </option>
-
           <option
             [ngValue]="eStatus.Cancelled"
             [disabled]="isTerminalState && originalStatus !== eStatus.Cancelled"
           >
             Cancelled
           </option>
-
           <option
             [ngValue]="eStatus.NoShow"
             [disabled]="isTerminalState && originalStatus !== eStatus.NoShow"
@@ -91,15 +111,12 @@
             No Show
           </option>
         </select>
-
         @if(isTerminalState) {
         <small
           class="text-muted"
           style="color: #e67e22; margin-top: 5px; display: block"
         >
-          <i class="fa-solid fa-lock"></i>
-          This interview is finalized ({{ originalStatus }}) and cannot be
-          changed.
+          <i class="fa-solid fa-lock"></i> Finalized ({{ originalStatus }}).
         </small>
         }
       </div>
